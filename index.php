@@ -7,7 +7,7 @@ include "functions.php";
 $competitionId = 1;
 
 //LANGUAGE (0 = FINNISH, 1 = ENGLISH)
-$l = 1;
+$l = 0;
 $title = "Imoittautuminen Jannen Kisat 2026";
 $headerImage = "background-image: url('images/header-image.jpg')";
 $compNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
@@ -30,6 +30,7 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css">
   <script src="https://kit.fontawesome.com/9e7a1653cf.js" crossorigin="anonymous"></script>
+  <script src="main.js"></script>
 </head>
 
 <body class="bg-dark">
@@ -44,12 +45,13 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
     <div class="enrollment-form border p-1 p-md-3">
       <h4><?php echo $language[$l]["header"]; ?></h4>
       <form action="enrollment_handler.php" method="post">
+        <!--===== PILOT INFO =====-->
         <fieldset>
           <legend><?php echo $language[$l]["fieldset-1"]; ?></legend>
           <input type="hidden" name="competition-id" value="<?php echo $competitionId; ?>">
           <div class="row">
             <div class="col-12 col-md-2">
-              <label for="pilot-first-name"><?php echo $language[$l]["label-pilot-first-name"]; ?></label>
+              <label for="pilot-first-name"><?php echo $language[$l]["label-pilot-first-name"] . "<span class='text-danger'> *</span>"; ?></label>
               <input class="form-control" type="text" name="pilot-first-name" id="pilot-first-name">
             </div>
             <div class="col-12 col-md-2">
@@ -62,7 +64,7 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
             </div>
             <div class="col-12 col-md-3">
               <label for="pilot-email"><?php echo $language[$l]["label-pilot-email"]; ?></label>
-              <input class="form-control" type="text" name="pilot-email" id="pilot-email">
+              <input class="form-control" type="email" name="pilot-email" id="pilot-email">
             </div>
             <div class="col-12 col-md-3">
               <label for="pilot-club"><?php echo $language[$l]["label-pilot-club"]; ?></label>
@@ -70,7 +72,8 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
             </div>
           </div>
         </fieldset>
-        <fieldset class="mt-3">
+        <!--===== PLANE INFO =====-->
+        <fieldset class="mt-4">
           <legend><?php echo $language[$l]["fieldset-2"]; ?></legend>
           <div class="row">
             <div class="col-12 col-md-2">
@@ -107,42 +110,58 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
               </select>
             </div>
           </div>
-          <div class="row">
-            <fieldset class="mt-3">
-              <legend><?php echo $language[$l]["fieldset-3"]; ?></legend>
-              <div class="col-12 col-md-3">
-                <label for="competition-classes"><?php echo $language[$l]["label-select-option-competiton-class"]; ?></label>
-                <select class="form-control" name="competition-class" id="competition-class">
-                  <?php
-                  if ($l == 0) {
-                    echo "<option value = '0'>Valitse luokka</option>";
-                    foreach ($competitonClasses as $class) {
-                      echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_fin'] . "</option>";
-                    }
-                  } else if ($l == 1) {
-                    echo "<option value = '0'>Choose class</option>";
-                    foreach ($competitonClasses as $class) {
-                      echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_eng'] . "</option>";
-                    }
-                  }
-                  ?>
-                </select>
-              </div>
-            </fieldset>
+          <div class="row mt-2">
+            <div class="col-12 col-md-2">
+              <label for="flarm-id">Flarm ID</label>
+              <input class="form-control" type="text" name="flarm-id" id="flarm-id">
+            </div>
           </div>
         </fieldset>
-        <fieldset class="mt-3">
-          <legend><?php echo $language[$l]["fieldset-4"]; ?></legend>
+        <!--===== COMPETITION CLASS =====-->
+        <fieldset class="mt-4">
+          <legend><?php echo $language[$l]["fieldset-3"]; ?></legend>
           <div class="row">
-            <div class="col-12 col-md-5">
-              <label for="flight_logger-1"><?php echo $language[$l]["label-logger-1"]; ?></label>
-              <input type="file" name="flight_logger-1" id="flight_logger-1">
-            </div>
-            <div class="col-12 col-md-5">
-              <label for="flight_logger-1"><?php echo $language[$l]["label-logger-2"]; ?></label>
-              <input type="file" name="flight_logger-2" id="flight_logger-2">
+            <div class="col-12 col-md-2">
+              <select class="form-control" name="competition-class" id="competition-class">
+                <?php
+                if ($l == 0) {
+                  echo "<option value = '0'>Valitse luokka</option>";
+                  foreach ($competitonClasses as $class) {
+                    echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_fin'] . "</option>";
+                  }
+                } else if ($l == 1) {
+                  echo "<option value = '0'>Choose class</option>";
+                  foreach ($competitonClasses as $class) {
+                    echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_eng'] . "</option>";
+                  }
+                }
+                ?>
+              </select>
             </div>
           </div>
+        </fieldset>
+        <!--===== FLIGHT LOGGERS =====-->
+        <fieldset class="mt-4">
+          <legend><?php echo $language[$l]["fieldset-4"]; ?></legend>
+          <div class="row align-items-center">
+            <div class="col-12 col-md-4">
+              <label for="flight-logger-1" class="form-label"><?php echo $language[$l]["label-logger-1"]; ?></label>
+              <input class="form-control" type="file" id="flight-logger-1" name="flight-logger-1" required>
+            </div>
+            <div class="col-12 col-md-4">
+              <label for="flight-logger-2" class="form-label"><?php echo $language[$l]["label-logger-2"]; ?></label>
+              <input class="form-control" type="file" id="flight-logger-2" name="flight-logger-2">
+            </div>
+            <div class="col-12 col-md-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="checkbox-logger-files" name="checkbox-logger-files" value="" onchange="flightLoggerOne()">
+                <label class="form-check-label text-danger"><?php echo $language[$l]["label-checkbox-logger-files"]; ?></label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="mt-4">
+          <legend><?php echo $language[$l]["fieldset-5"]; ?></legend>
         </fieldset>
       </form>
     </div>

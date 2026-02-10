@@ -6,6 +6,7 @@ $language = array(
     "fieldset-2" => "Kone",
     "fieldset-3" => "Kilpailuluokka",
     "fieldset-4" => "Lennon tallentimet",
+    "fieldset-5" => "Majoitus",
     "select-option-winglets-1" => "Valitse",
     "select-option-winglets-2" => "Kyllä",
     "select-option-winglets-3" => "Ei",
@@ -24,9 +25,9 @@ $language = array(
     "label-plane-wingspan" => "Kärkiväli",
     "label-plane-winglets" => "Wingletit",
     "label-plane-engine" => "Moottori",
-    "label-select-option-competiton-class" => "Kilpailuluokka",
     "label-logger-1" => "Ykköstallennin",
     "label-logger-2" => "Kakkostallennin",
+    "label-checkbox-logger-files"=>"Lähetän tiedostot myöhemmin",
   ),
   array(
     "header" => "Enrollment",
@@ -34,6 +35,7 @@ $language = array(
     "fieldset-2" => "Plane",
     "fieldset-3" => "Competition class",
     "fieldset-4" => "Flight loggers",
+    "fieldset-5" => "Accomodation",
     "select-option-winglets-1" => "Choose",
     "select-option-winglets-2" => "Yes",
     "select-option-winglets-3" => "No",
@@ -52,10 +54,9 @@ $language = array(
     "label-plane-wingspan" => "Wing span",
     "label-plane-winglets" => "Winglets",
     "label-plane-engine" => "Engine",
-    "label-select-option-competiton-class" => "Competition class",
     "label-logger-1" => "Primary logger",
     "label-logger-2" => "Secondary logger",
-
+    "label-checkbox-logger-files"=>"I send the files later",
   )
 )
 ?>
