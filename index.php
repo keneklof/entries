@@ -2,17 +2,21 @@
 include "autoloader.php";
 include "language.php";
 include "functions.php";
-$competition = new Competitions();
+
 //COMPETION VARIABLES
 $competitionId = 1;
+
 //LANGUAGE (0 = FINNISH, 1 = ENGLISH)
-$l = 0;
+$l = 1;
 $title = "Imoittautuminen Jannen Kisat 2026";
 $headerImage = "background-image: url('images/header-image.jpg')";
 $compNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
 $compDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
 $compLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:30%;";
 
+//SELECTING COMPETITION CLASSES
+$c = new Competitions();
+$competitonClasses = $c->selectCompetitonClasses($competitionId);
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +32,7 @@ $compLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position
   <script src="https://kit.fontawesome.com/9e7a1653cf.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-secondary">
+<body class="bg-dark">
   <div class="container bg-light">
     <header class="m-0 p-0">
       <div style="<?php echo $headerImage; ?>" id="header">
@@ -66,7 +70,7 @@ $compLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position
             </div>
           </div>
         </fieldset>
-        <fieldset class="mt-2">
+        <fieldset class="mt-3">
           <legend><?php echo $language[$l]["fieldset-2"]; ?></legend>
           <div class="row">
             <div class="col-12 col-md-2">
@@ -104,15 +108,46 @@ $compLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position
             </div>
           </div>
           <div class="row">
-            <div class="col-12 col-md-3">
-            <select class="form-control" name="competition-class" id="competition-class">
-              <!--===== COMPETITION CLASSES FROM DATABASE =====-->
-            </select>
+            <fieldset class="mt-3">
+              <legend><?php echo $language[$l]["fieldset-3"]; ?></legend>
+              <div class="col-12 col-md-3">
+                <label for="competition-classes"><?php echo $language[$l]["label-select-option-competiton-class"]; ?></label>
+                <select class="form-control" name="competition-class" id="competition-class">
+                  <?php
+                  if ($l == 0) {
+                    echo "<option value = '0'>Valitse luokka</option>";
+                    foreach ($competitonClasses as $class) {
+                      echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_fin'] . "</option>";
+                    }
+                  } else if ($l == 1) {
+                    echo "<option value = '0'>Choose class</option>";
+                    foreach ($competitonClasses as $class) {
+                      echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_eng'] . "</option>";
+                    }
+                  }
+                  ?>
+                </select>
+              </div>
+            </fieldset>
+          </div>
+        </fieldset>
+        <fieldset class="mt-3">
+          <legend><?php echo $language[$l]["fieldset-4"]; ?></legend>
+          <div class="row">
+            <div class="col-12 col-md-5">
+              <label for="flight_logger-1"><?php echo $language[$l]["label-logger-1"]; ?></label>
+              <input type="file" name="flight_logger-1" id="flight_logger-1">
+            </div>
+            <div class="col-12 col-md-5">
+              <label for="flight_logger-1"><?php echo $language[$l]["label-logger-2"]; ?></label>
+              <input type="file" name="flight_logger-2" id="flight_logger-2">
             </div>
           </div>
         </fieldset>
       </form>
-
+    </div>
+    <div class="footer bg-secondary">
+      <!--===== FOOTER CONTENT =====-->
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

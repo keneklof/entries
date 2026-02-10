@@ -5,3 +5,8 @@
   background-size:cover;
   background-position: center;
 }
+
+.footer {
+  box-sizing:content-box;
+  height: 100px;
+}
