@@ -7,7 +7,7 @@ include "functions.php";
 $competitionId = 1;
 
 //LANGUAGE (0 = FINNISH, 1 = ENGLISH)
-$l = 0;
+$l = 1;
 $title = "Imoittautuminen Jannen Kisat 2026";
 $headerImage = "background-image: url('images/header-image.jpg')";
 $compNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
@@ -34,7 +34,7 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
 </head>
 
 <body class="bg-dark">
-  <div class="container bg-light">
+  <div class="container bg-light pb-3 pt-2">
     <header class="m-0 p-0">
       <div style="<?php echo $headerImage; ?>" id="header">
         <h3 style="<?php echo $compNameTextStyle; ?>">43. Jannen Kisat</h3>
@@ -72,8 +72,9 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
             </div>
           </div>
         </fieldset>
+        <hr>
         <!--===== PLANE INFO =====-->
-        <fieldset class="mt-4">
+        <fieldset class="my-4">
           <legend><?php echo $language[$l]["fieldset-2"]; ?></legend>
           <div class="row">
             <div class="col-12 col-md-2">
@@ -117,8 +118,9 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
             </div>
           </div>
         </fieldset>
+        <hr>
         <!--===== COMPETITION CLASS AND FLIGHT LOGGERS =====-->
-        <fieldset class="mt-4">
+        <fieldset class="my-4">
           <legend><?php echo $language[$l]["fieldset-3"]; ?></legend>
           <div class="row align-items-center">
             <div class="col-12 col-md-2">
@@ -156,20 +158,36 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
             </div>
           </div>
         </fieldset>
-        <!--===== ACCOMAODATION =====-->
-        <fieldset class="mt-4">
+        <hr>
+        <!--===== ACCOMODATION AND OTHER INFO =====-->
+        <fieldset class="my-4">
           <legend><?php echo $language[$l]["fieldset-4"]; ?></legend>
           <div class="row">
             <div class="col-12 col-md-3">
               <label for="accomodation"><?php echo $language[$l]["label-accomodation"]; ?></label>
-             <select class="form-control" name="accomodation" id="accomodation">
-              <option value="0" selected disabled><?php echo $language[$l]["choose-accomodation"]; ?></option>
-              <option value="0"><?php echo $language[$l]["choose-accomodation"]; ?></option>
-             
-             </select>
+              <select class="form-control" name="accomodation" id="accomodation">
+                <?php
+                echo "<option value='0' selected disabled>" . $language[$l]['choose-accomodation'] . "</option>";
+                echo "<option value='1'>" . $language[$l]['accomodation-motel'] . "</option>";
+                echo "<option value='2'>" . $language[$l]['accomodation-season'] . "</option>";
+                echo "<option value='3'>" . $language[$l]['accomodation-week'] . "</option>";
+                echo "<option value='4'>" . $language[$l]['accomodation-tent'] . "</option>";
+                echo "<option value='5'>" . $language[$l]['accomodation-no'] . "</option>";
+                echo "<option value='6'>" . $language[$l]['accomodation-cns'] . "</option>";
+                ?>
+              </select>
+            </div>
+            <div class="col-12 col-md-9">
+              <label for="other-info"><?php echo $language[$l]["label-other-info"]; ?></label>
+              <textarea class="w-100 form-control" name="other-info" id="other-info" rows="10" placeholder="<?php echo $language[$l]['placeholder-info']; ?>"></textarea>
             </div>
           </div>
         </fieldset>
+        <div class="row mt-5">
+          <div class="col-12 col-md-4 offset-md-4">
+            <button class="btn btn-primary w-100" type="submit"><?php echo $language[$l]['button-enrollment-send']; ?></button>
+          </div>
+        </div>
       </form>
     </div>
     <div class="footer bg-secondary">
