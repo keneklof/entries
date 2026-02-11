@@ -23,7 +23,7 @@ class Competitions extends Database
   {
 
     try {
-      $sql    = ("SELECT class_id, comp_id, class_name_fin, class_name_eng FROM active_competition_classes WHERE comp_id = $compId");
+      $sql    = ("SELECT class_id, comp_id, class_name_fin, class_name_eng FROM view_competition_classes WHERE comp_id = $compId");
       $stmt   = $this->connect()->query($sql);
       $classes = $stmt->fetchAll();
     } catch (PDOException $e) {

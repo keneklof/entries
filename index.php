@@ -117,11 +117,13 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
             </div>
           </div>
         </fieldset>
-        <!--===== COMPETITION CLASS =====-->
+        <!--===== COMPETITION CLASS AND FLIGHT LOGGERS =====-->
         <fieldset class="mt-4">
           <legend><?php echo $language[$l]["fieldset-3"]; ?></legend>
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-12 col-md-2">
+              <label for="competition-class"><?php echo $language[$l]["label-competition-class"]; ?></label>
+              <!--===== Classes seleted from database =====-->
               <select class="form-control" name="competition-class" id="competition-class">
                 <?php
                 if ($l == 0) {
@@ -138,19 +140,13 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
                 ?>
               </select>
             </div>
-          </div>
-        </fieldset>
-        <!--===== FLIGHT LOGGERS =====-->
-        <fieldset class="mt-4">
-          <legend><?php echo $language[$l]["fieldset-4"]; ?></legend>
-          <div class="row align-items-center">
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-3">
               <label for="flight-logger-1" class="form-label"><?php echo $language[$l]["label-logger-1"]; ?></label>
               <input class="form-control" type="file" id="flight-logger-1" name="flight-logger-1" required>
             </div>
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-3">
               <label for="flight-logger-2" class="form-label"><?php echo $language[$l]["label-logger-2"]; ?></label>
-              <input class="form-control" type="file" id="flight-logger-2" name="flight-logger-2">
+              <input class="form-control" type="file" id="flight-logger-2" name="flight-logger-2" required>
             </div>
             <div class="col-12 col-md-3">
               <div class="form-check">
@@ -160,8 +156,19 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
             </div>
           </div>
         </fieldset>
+        <!--===== ACCOMAODATION =====-->
         <fieldset class="mt-4">
-          <legend><?php echo $language[$l]["fieldset-5"]; ?></legend>
+          <legend><?php echo $language[$l]["fieldset-4"]; ?></legend>
+          <div class="row">
+            <div class="col-12 col-md-3">
+              <label for="accomodation"><?php echo $language[$l]["label-accomodation"]; ?></label>
+             <select class="form-control" name="accomodation" id="accomodation">
+              <option value="0" selected disabled><?php echo $language[$l]["choose-accomodation"]; ?></option>
+              <option value="0"><?php echo $language[$l]["choose-accomodation"]; ?></option>
+             
+             </select>
+            </div>
+          </div>
         </fieldset>
       </form>
     </div>
