@@ -79,7 +79,7 @@ $language = array(
     "accomodation-tent"=>"Tent",
     "accomodation-no"=>"Not on the airfield",
     "accomodation-cns"=>"I don't know yet",
-    "placeholder-info"=>"Assistant 1: name and phone number\nAssistan 2: name and phone number\nOther info to the organisation",
+    "placeholder-info"=>"Assistant 1: name and phone number\nAssistant 2: name and phone number\nOther info to the organisation",
     "button-enrollment-send"=>"Send",
   )
 )

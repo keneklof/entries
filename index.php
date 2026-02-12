@@ -5,18 +5,45 @@ include "functions.php";
 
 //COMPETION VARIABLES
 $competitionId = 1;
+//DATABASE SELECTIONS
+//Select competition info
+$c = new Competitions();
+$competitionInfo = $c->selectCompetitionInfo($competitionId);
+//Select competition classes
+$competitonClasses = $c->selectCompetitonClasses($competitionId);
 
 //LANGUAGE (0 = FINNISH, 1 = ENGLISH)
-$l = 1;
-$title = "Imoittautuminen Jannen Kisat 2026";
-$headerImage = "background-image: url('images/header-image.jpg')";
-$compNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
-$compDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
-$compLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:30%;";
+if ($competitionInfo[0]["competition_language"] == "FIN") {
+  $l = 0;
+} else if ($competitionInfo[0]["competition_language"] == "ENG") {
+  $l = 1;
+}
 
-//SELECTING COMPETITION CLASSES
-$c = new Competitions();
-$competitonClasses = $c->selectCompetitonClasses($competitionId);
+$competitionTitle = $competitionInfo[0]["competition_name"];
+$competitionLocation = $competitionInfo[0]["competition_location"];
+
+//CREATING COMPETITION DATES
+$cs = new DateTime($competitionInfo[0]["competition_start"]);
+$ce = new DateTime($competitionInfo[0]["competition_end"]);
+$competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
+
+//HEADER STYLING
+$headerImage = "background-image: url('images/header-image.jpg')";
+$competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
+$competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
+$competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:30%;";
+
+//COMPETITION LINKS
+if ($l == 0) {
+  $linkWebSite = "<a href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
+  $linkSoaringSpot = "<a href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+  $linkEnrolled = "<a href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Ilmoittautuneet</a>";
+} else if ($l == 1) {
+  $linkSoaringSpot = "<a href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+  $linkWebSite = "<a href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
+  $linkEnrolled = "<a href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Enrolled</a>";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +52,7 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><?php echo $title; ?>
+  <title><?php echo $competitionTitle; ?>
   </title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css">
@@ -34,14 +61,22 @@ $competitonClasses = $c->selectCompetitonClasses($competitionId);
 </head>
 
 <body class="bg-dark">
-  <div class="container bg-light pb-3 pt-2">
+  <div class="container bg-light pb-3 pt-2 mt-2">
     <header class="m-0 p-0">
       <div style="<?php echo $headerImage; ?>" id="header">
-        <h3 style="<?php echo $compNameTextStyle; ?>">43. Jannen Kisat</h3>
-        <h3 style="<?php echo $compDateTextStyle; ?>">18.7.-25.7.2026</h3>
-        <h3 style="<?php echo $compLocationTextStyle; ?>">Räyskälä</h3>
+        <h3 style="<?php echo $competitionNameTextStyle; ?>"><?php echo $competitionTitle; ?></h3>
+        <h3 style="<?php echo $competitionDateTextStyle; ?>"><?php echo $competitionDates; ?></h3>
+        <h3 style="<?php echo $competitionLocationTextStyle; ?>"><?php echo $competitionLocation; ?></h3>
       </div>
     </header>
+    <div class="competition-info alert alert-light p-1 px-md-5 py-3">
+      <?php if ($l == 0) {
+        echo "<h5>KILPAILUINFO</h5>" . nl2br($competitionInfo[0]["competition_info_fin"]) . "<br><h5>LINKIT</h5>" . $linkSoaringSpot . "<br>" . $linkWebSite . "<br>" . $linkEnrolled;
+      } else if ($l == 1) {
+        echo "<h5>COMPETITION INFO</h5>" . nl2br($competitionInfo[0]["competition_info_eng"]) . "<h5>LINKS</h5>" . $linkSoaringSpot . "<br>" . $linkWebSite . "<br>" . $linkEnrolled;
+      }
+      ?>
+    </div>
     <div class="enrollment-form border p-1 p-md-3">
       <h4><?php echo $language[$l]["header"]; ?></h4>
       <form action="enrollment_handler.php" method="post">

@@ -4,11 +4,11 @@ class Competitions extends Database
 {
   public $compId;
 
-  public function selectCompetition($compId)
+  public function selectCompetitionInfo($compId)
   {
     $this->compId = $compId;
 
-    //FETCH ALL DONATORS
+    //FETCH COMPETITION INFO
     try {
       $sql    = ("SELECT * FROM competitions WHERE competition_id = '$compId'");
       $stmt   = $this->connect()->query($sql);
