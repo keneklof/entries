@@ -2,9 +2,10 @@
 include "autoloader.php";
 include "language.php";
 include "functions.php";
+include "competition.php";  
 
 //COMPETION VARIABLES
-$competitionId = 1;
+//$competitionId = 1;
 //DATABASE SELECTIONS
 //Select competition info
 $c = new Competitions();
@@ -36,13 +37,13 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
 
 //COMPETITION LINKS
 if ($l == 0) {
-  $linkWebSite = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
-  $linkSoaringSpot = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEnrolled = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Ilmoittautuneet</a>";
+  $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
+  $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+  $linkEnrolled = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Ilmoittautuneet</a>";
 } else if ($l == 1) {
-  $linkWebSite = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
-  $linkSoaringSpot = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEnrolled = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Enrolled</a>";
+  $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
+  $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+  $linkEnrolled = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Enrolled</a>";
 }
 
 //HANDLING FORM INPUTS
@@ -105,7 +106,7 @@ if (isset($_POST["submit"])) {
     <div class="competition-info alert alert-secondary p-2 p-md-4 mt-3 text-dark">
       <?php if ($l == 0) {
         echo "<h5 class='mt-3'>KILPAILUINFO</h5>" . nl2br($competitionInfo[0]["competition_info_fin"]) .
-          "<h5 class='mt-3'>LINKKEJÄ</h5>
+          "<h5 class='mt-3 mb-3'>LINKKEJÄ</h5>
         <div class='row justify-content-center justify-content-md-start'>
         <div class='col-8 col-md-3'>" . $linkWebSite . "</div>
         <div class='col-8 col-md-3'>" . $linkEnrolled . "</div>
@@ -265,7 +266,7 @@ if (isset($_POST["submit"])) {
         </fieldset>
         <div class="row mt-5">
           <div class="col-12 col-md-4 offset-md-4">
-            <button form="enrollment-form" class="btn btn-primary w-100" type="submit"><?php echo $language[$l]['button-enrollment-send']; ?></button>
+            <button form="enrollment-form" class="btn btn-success w-100" type="submit"><?php echo $language[$l]['button-enrollment-send']; ?></button>
           </div>
         </div>
       </form>
