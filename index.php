@@ -28,6 +28,7 @@ $ce = new DateTime($competitionInfo[0]["competition_end"]);
 $competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
 
 //HEADER STYLING
+//Background image size 1000x300
 $headerImage = "background-image: url('images/header-image.jpg')";
 $competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
 $competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
@@ -35,14 +36,46 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
 
 //COMPETITION LINKS
 if ($l == 0) {
-  $linkWebSite = "<a href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
-  $linkSoaringSpot = "<a href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEnrolled = "<a href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Ilmoittautuneet</a>";
+  $linkWebSite = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
+  $linkSoaringSpot = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+  $linkEnrolled = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Ilmoittautuneet</a>";
 } else if ($l == 1) {
-  $linkSoaringSpot = "<a href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkWebSite = "<a href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
-  $linkEnrolled = "<a href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Enrolled</a>";
+  $linkWebSite = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
+  $linkSoaringSpot = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+  $linkEnrolled = "<a class='btn btn-outline-primary w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Enrolled</a>";
 }
+
+//HANDLING FORM INPUTS
+if (isset($_POST["submit"])) {
+
+  //Pilot first name
+  if (isset($_POST["pilot-first-name"])) {
+    $firstName = checkInput($_POST["pilot-first-name"]);
+  }
+
+  //Pilot last name
+  if (isset($_POST["pilot-last-name"])) {
+    $lastName = checkInput($_POST["pilot-last-name"]);
+  }
+
+  //Pilot phone
+  if (isset($_POST["pilot-phone"])) {
+    $phone = checkInput($_POST["pilot-phone"]);
+  }
+
+  //Pilot email
+  if (isset($_POST["pilot-email"])) {
+    $email = checkInput($_POST["pilot-email"]);
+  }
+
+  //Pilot club
+  if (isset($_POST["pilot-club"])) {
+    $club = checkInput($_POST["pilot-club"]);
+  } else {
+    $club = "Ei kerhoa";
+  }
+
+} //End of submit
 
 ?>
 
@@ -69,17 +102,29 @@ if ($l == 0) {
         <h3 style="<?php echo $competitionLocationTextStyle; ?>"><?php echo $competitionLocation; ?></h3>
       </div>
     </header>
-    <div class="competition-info alert alert-light p-1 px-md-5 py-3">
+    <div class="competition-info alert alert-secondary p-2 p-md-4 mt-3 text-dark">
       <?php if ($l == 0) {
-        echo "<h5>KILPAILUINFO</h5>" . nl2br($competitionInfo[0]["competition_info_fin"]) . "<br><h5>LINKIT</h5>" . $linkSoaringSpot . "<br>" . $linkWebSite . "<br>" . $linkEnrolled;
+        echo "<h5 class='mt-3'>KILPAILUINFO</h5>" . nl2br($competitionInfo[0]["competition_info_fin"]) .
+          "<h5 class='mt-3'>LINKKEJÄ</h5>
+        <div class='row justify-content-center justify-content-md-start'>
+        <div class='col-8 col-md-3'>" . $linkWebSite . "</div>
+        <div class='col-8 col-md-3'>" . $linkEnrolled . "</div>
+        <div class='col-8 col-md-3'>" . $linkSoaringSpot . "</div>
+        </div>";
       } else if ($l == 1) {
-        echo "<h5>COMPETITION INFO</h5>" . nl2br($competitionInfo[0]["competition_info_eng"]) . "<h5>LINKS</h5>" . $linkSoaringSpot . "<br>" . $linkWebSite . "<br>" . $linkEnrolled;
+        echo "<h5 class='mt-3'>COMPETITION INFO</h5>" . nl2br($competitionInfo[0]["competition_info_eng"]) .
+          "<h5 class='mt-3'>LINKS</h5>
+        <div class='row justify-content-center justify-content-md-start'>
+        <div class='col-8 col-md-3'>" . $linkWebSite . "</div>
+        <div class='col-8 col-md-3'>" . $linkEnrolled . "</div>
+        <div class='col-8 col-md-3'>" . $linkSoaringSpot . "</div>
+        </div>";
       }
       ?>
     </div>
-    <div class="enrollment-form border p-1 p-md-3">
+    <div class="enrollment-form border p-4 p-md-3">
       <h4><?php echo $language[$l]["header"]; ?></h4>
-      <form action="enrollment_handler.php" method="post">
+      <form name="enrollment" id="enrollment-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post"> ´
         <!--===== PILOT INFO =====-->
         <fieldset>
           <legend><?php echo $language[$l]["fieldset-1"]; ?></legend>
@@ -220,7 +265,7 @@ if ($l == 0) {
         </fieldset>
         <div class="row mt-5">
           <div class="col-12 col-md-4 offset-md-4">
-            <button class="btn btn-primary w-100" type="submit"><?php echo $language[$l]['button-enrollment-send']; ?></button>
+            <button form="enrollment-form" class="btn btn-primary w-100" type="submit"><?php echo $language[$l]['button-enrollment-send']; ?></button>
           </div>
         </div>
       </form>

@@ -1,7 +1,7 @@
 <?php
 $language = array(
   array(
-    "header" => "Ilmoittautuminen",
+    "header" => "ILMOITTAUTUMINEN",
     "fieldset-1" => "Pilotti",
     "fieldset-2" => "Kone",
     "fieldset-3" => "Kilpailuluokka ja lennontallentimet",
@@ -42,7 +42,7 @@ $language = array(
     "button-enrollment-send"=>"Lähetä",
   ),
   array(
-    "header" => "Enrollment",
+    "header" => "ENROLLMENT",
     "fieldset-1" => "Pilot",
     "fieldset-2" => "Plane",
     "fieldset-3" => "Competition class and flight loggers",

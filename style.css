@@ -10,3 +10,7 @@
   box-sizing:content-box;
   height: 100px;
 }
+
+.info-links {
+  width: 200px;
+}
