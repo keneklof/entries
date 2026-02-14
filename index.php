@@ -2,10 +2,12 @@
 include "autoloader.php";
 include "language.php";
 include "functions.php";
-include "competition.php";  
-
+include "competition.php";
+//echo "<span class='text-light'>".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."</span>";
 //COMPETION VARIABLES
-//$competitionId = 1;
+$errorArray = array();
+$success = "";
+date_default_timezone_set("Europe/Helsinki");
 //DATABASE SELECTIONS
 //Select competition info
 $c = new Competitions();
@@ -46,7 +48,7 @@ if ($l == 0) {
   $linkEnrolled = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Enrolled</a>";
 }
 
-//HANDLING FORM INPUTS
+//HANDLING ENTRY FORM INPUTS
 if (isset($_POST["submit"])) {
 
   //Pilot first name
@@ -76,8 +78,79 @@ if (isset($_POST["submit"])) {
     $club = "Ei kerhoa";
   }
 
-} //End of submit
+  //Plane type
+  if (isset($_POST["plane-type"])) {
+    $glider = checkInput($_POST["plane-type"]);
+  }
 
+  //Plane register
+  if (isset($_POST["plane-register"])) {
+    $register = checkInput($_POST["plane-register"]);
+  }
+
+  //Plane competition sign
+  if (isset($_POST["plane-competition-sign"])) {
+    $competitonSign = checkInput($_POST["plane-competition-sign"]);
+  }
+
+  //Plane wingspan
+  if (isset($_POST["plane-wingspan"])) {
+    $wingspan = checkInput($_POST["plane-wingspan"]);
+  }
+
+  //Plane winglets
+  if (isset($_POST["plane-winglets"]) && $_POST["plane-winglets"] != 0) {
+    $winglets = checkInput($_POST["plane-winglets"]);
+  } else {
+    $errorArray["winglets"] = $language[$l]["error-form-winglets"];
+  }
+
+  //Plane engine
+  if (isset($_POST["plane-engine"]) && $_POST["plane-engine"] != 0) {
+    $engine = checkInput($_POST["plane-engine"]);
+  } else {
+    $errorArray["engine"] = $language[$l]["error-form-engine"];
+  }
+
+  //Plane Flarm ID
+  if (isset($_POST["flarm-id"]) && $_POST["flarm-id"] != 0) {
+    $flarmId = checkInput($_POST["flarm-id"]);
+  }
+
+  //Plane competition class
+  if (isset($_POST["competition-class"]) && $_POST["competition-class"] != 0) {
+    $competitionClass = checkInput($_POST["competition-class"]);
+  } else {
+    $errorArray["competition-class"] = $language[$l]["error-form-competition-class"];
+  }
+
+  //Pilot accomodation
+  if (isset($_POST["accomodation"]) && $_POST["accomodation"] != 0) {
+    $accomodation = checkInput($_POST["accomodation"]);
+  } else {
+    $errorArray["accomodation"] = $language[$l]["error-form-accomodation"];
+  }
+
+  //Other info
+  if ($_POST["other-info"] != "") {
+    $otherInfo = checkInput($_POST["other-info"]);
+  } else {
+    $otherInfo = "Ei muuta infoa";
+  }
+
+  //Entry time
+  $et = new DateTime();
+  $entryTime = $et->format("Y-m-d H:i:s");
+
+  $p = new Pilots();
+  $newPilot = $p->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $accomodation, $otherInfo, 0, $glider, $register, $competitonSign, $wingspan, $winglets, $engine, $flarmId, $competitionClass, 0, 0, $entryTime);
+
+  if ($newPilot == 1) {
+    header("location:" . $siteUrl);
+  } else if ($newPilot == 0) {
+    $success = "Tallennus ei onnistunut";
+  }
+} //End of submit
 ?>
 
 <!DOCTYPE html>
@@ -92,6 +165,12 @@ if (isset($_POST["submit"])) {
   <link rel="stylesheet" href="style.css">
   <script src="https://kit.fontawesome.com/9e7a1653cf.js" crossorigin="anonymous"></script>
   <script src="main.js"></script>
+  <script>
+    //Prevents resending form when page is refreshed
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+  </script>
 </head>
 
 <body class="bg-dark">
@@ -122,6 +201,8 @@ if (isset($_POST["submit"])) {
         </div>";
       }
       ?>
+      <?php echo $success; ?>
+
     </div>
     <div class="enrollment-form border p-4 p-md-3">
       <h4><?php echo $language[$l]["header"]; ?></h4>
@@ -206,7 +287,7 @@ if (isset($_POST["submit"])) {
           <div class="row align-items-center">
             <div class="col-12 col-md-2">
               <label for="competition-class"><?php echo $language[$l]["label-competition-class"]; ?></label>
-              <!--===== Classes seleted from database =====-->
+              <!--===== Classes selected from database =====-->
               <select class="form-control" name="competition-class" id="competition-class">
                 <?php
                 if ($l == 0) {
@@ -229,7 +310,7 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-3">
               <label for="flight-logger-2" class="form-label"><?php echo $language[$l]["label-logger-2"]; ?></label>
-              <input class="form-control" type="file" id="flight-logger-2" name="flight-logger-2" required>
+              <input class="form-control" type="file" id="flight-logger-2" name="flight-logger-2">
             </div>
             <div class="col-12 col-md-3">
               <div class="form-check">
@@ -266,7 +347,7 @@ if (isset($_POST["submit"])) {
         </fieldset>
         <div class="row mt-5">
           <div class="col-12 col-md-4 offset-md-4">
-            <button form="enrollment-form" class="btn btn-success w-100" type="submit"><?php echo $language[$l]['button-enrollment-send']; ?></button>
+            <button form="enrollment-form" class="btn btn-success w-100" name="submit" type="submit"><?php echo $language[$l]['button-enrollment-send']; ?></button>
           </div>
         </div>
       </form>
