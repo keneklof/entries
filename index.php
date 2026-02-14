@@ -6,6 +6,7 @@ include "competition.php";
 //echo "<span class='text-light'>".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."</span>";
 //COMPETION VARIABLES
 $errorArray = array();
+$erroUpload = array();
 $success = "";
 date_default_timezone_set("Europe/Helsinki");
 //DATABASE SELECTIONS
@@ -72,7 +73,8 @@ if (isset($_POST["submit"])) {
   }
 
   //Pilot club
-  if (isset($_POST["pilot-club"])) {
+  //Plane Flarm ID
+  if (isset($_POST["pilot-club"]) && $_POST["pilot-club"] != "") {
     $club = checkInput($_POST["pilot-club"]);
   } else {
     $club = "Ei kerhoa";
@@ -85,12 +87,12 @@ if (isset($_POST["submit"])) {
 
   //Plane register
   if (isset($_POST["plane-register"])) {
-    $register = checkInput($_POST["plane-register"]);
+    $register = strtoupper(checkInput($_POST["plane-register"]));
   }
 
   //Plane competition sign
   if (isset($_POST["plane-competition-sign"])) {
-    $competitonSign = checkInput($_POST["plane-competition-sign"]);
+    $competitionSign = strtoupper(checkInput($_POST["plane-competition-sign"]));
   }
 
   //Plane wingspan
@@ -98,7 +100,7 @@ if (isset($_POST["submit"])) {
     $wingspan = checkInput($_POST["plane-wingspan"]);
   }
 
-  //Plane winglets
+  //Plane winglet
   if (isset($_POST["plane-winglets"]) && $_POST["plane-winglets"] != 0) {
     $winglets = checkInput($_POST["plane-winglets"]);
   } else {
@@ -113,8 +115,10 @@ if (isset($_POST["submit"])) {
   }
 
   //Plane Flarm ID
-  if (isset($_POST["flarm-id"]) && $_POST["flarm-id"] != 0) {
+  if (isset($_POST["flarm-id"]) && $_POST["flarm-id"] != "") {
     $flarmId = checkInput($_POST["flarm-id"]);
+  } else {
+    $flarmId = "---";
   }
 
   //Plane competition class
@@ -138,13 +142,40 @@ if (isset($_POST["submit"])) {
     $otherInfo = "Ei muuta infoa";
   }
 
+  //******* UPLOAD OF IGC FILES *********/
+  if ($_FILES["flight-logger-1"]["name"] != "" && $_FILES["flight-logger-1"]["size"] != 0) {
+    $target_dir = "igcfiles/";
+    $target_file = basename($_FILES["flight-logger-1"]["name"]);
+    $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $fileSize = $_FILES["flight-logger-1"]["size"];
+
+    $priority = 1;
+
+    if ($fileType != 'igc') {
+      $errorUpload['igc'] = 'e';
+    }
+
+    if ($fileSize > 5000000) {
+      $errorUpload['fs'] = 'e';
+    }
+
+    if (empty($errorUpload)) {
+      move_uploaded_file($_FILES['flight-logger-1']['tmp_name'], $target_dir . $competitionSign . "-" . $priority . "-" . $target_file);
+      $logger1 = 1;
+    }
+  }
+
+  //******* UPLOAD OF IGC FILES END *********/
+
   //Entry time
   $et = new DateTime();
   $entryTime = $et->format("Y-m-d H:i:s");
 
   $p = new Pilots();
-  $newPilot = $p->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $accomodation, $otherInfo, 0, $glider, $register, $competitonSign, $wingspan, $winglets, $engine, $flarmId, $competitionClass, 0, 0, $entryTime);
+  $newPilot = $p->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, 0, $entryTime);
 
+
+  //ENTRY SUCCESS
   if ($newPilot == 1) {
     header("location:" . $siteUrl);
   } else if ($newPilot == 0) {
@@ -206,27 +237,26 @@ if (isset($_POST["submit"])) {
     </div>
     <div class="enrollment-form border p-4 p-md-3">
       <h4><?php echo $language[$l]["header"]; ?></h4>
-      <form name="enrollment" id="enrollment-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post"> ´
+      <form name="enrollment" id="enrollment-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
         <!--===== PILOT INFO =====-->
         <fieldset>
           <legend><?php echo $language[$l]["fieldset-1"]; ?></legend>
-          <input type="hidden" name="competition-id" value="<?php echo $competitionId; ?>">
           <div class="row">
             <div class="col-12 col-md-2">
               <label for="pilot-first-name"><?php echo $language[$l]["label-pilot-first-name"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" type="text" name="pilot-first-name" id="pilot-first-name">
+              <input class="form-control" type="text" name="pilot-first-name" id="pilot-first-name" required>
             </div>
             <div class="col-12 col-md-2">
-              <label for="pilot-last-name"><?php echo $language[$l]["label-pilot-last-name"]; ?></label>
-              <input class="form-control" type="text" name="pilot-last-name" id="pilot-last-name">
+              <label for="pilot-last-name"><?php echo $language[$l]["label-pilot-last-name"] . "<span class='text-danger'> *</span>"; ?></label>
+              <input class="form-control" type="text" name="pilot-last-name" id="pilot-last-name" required>
             </div>
             <div class="col-12 col-md-2">
-              <label for="pilot-phone"><?php echo $language[$l]["label-pilot-phone"]; ?></label>
-              <input class="form-control" type="text" name="pilot-phone" id="pilot-phone">
+              <label for="pilot-phone"><?php echo $language[$l]["label-pilot-phone"] . "<span class='text-danger'> *</span>"; ?></label>
+              <input class="form-control" type="text" name="pilot-phone" id="pilot-phone" required>
             </div>
             <div class="col-12 col-md-3">
-              <label for="pilot-email"><?php echo $language[$l]["label-pilot-email"]; ?></label>
-              <input class="form-control" type="email" name="pilot-email" id="pilot-email">
+              <label for="pilot-email"><?php echo $language[$l]["label-pilot-email"] . "<span class='text-danger'> *</span>"; ?></label>
+              <input class="form-control" type="email" name="pilot-email" id="pilot-email" required>
             </div>
             <div class="col-12 col-md-3">
               <label for="pilot-club"><?php echo $language[$l]["label-pilot-club"]; ?></label>
@@ -240,23 +270,23 @@ if (isset($_POST["submit"])) {
           <legend><?php echo $language[$l]["fieldset-2"]; ?></legend>
           <div class="row">
             <div class="col-12 col-md-2">
-              <label for="plane-type"><?php echo $language[$l]["label-plane-type"]; ?></label>
-              <input class="form-control" type="text" name="plane-type" id="plane-type">
+              <label for="plane-type"><?php echo $language[$l]["label-plane-type"] . "<span class='text-danger'> *</span>"; ?></label>
+              <input class="form-control" type="text" name="plane-type" id="plane-type" required>
             </div>
             <div class="col-12 col-md-2">
-              <label for="plane-register"><?php echo $language[$l]["label-plane-register"]; ?></label>
-              <input class="form-control" register="text" name="plane-register" id="plane-register">
+              <label for="plane-register"><?php echo $language[$l]["label-plane-register"] . "<span class='text-danger'> *</span>"; ?></label>
+              <input class="form-control" register="text" name="plane-register" id="plane-register" required>
             </div>
             <div class="col-12 col-md-2">
-              <label for="plane-competition-sign"><?php echo $language[$l]["label-plane-competition-sign"]; ?></label>
-              <input class="form-control" competition-sign="text" name="plane-competition-sign" id="plane-competition-sign">
+              <label for="plane-competition-sign"><?php echo $language[$l]["label-plane-competition-sign"] . "<span class='text-danger'> *</span>"; ?></label>
+              <input class="form-control" competition-sign="text" name="plane-competition-sign" id="plane-competition-sign" required>
             </div>
             <div class="col-12 col-md-2">
-              <label for="plane-wingspan"><?php echo $language[$l]["label-plane-wingspan"]; ?></label>
-              <input class="form-control" wingspan="text" name="plane-wingspan" id="plane-wingspan">
+              <label for="plane-wingspan"><?php echo $language[$l]["label-plane-wingspan"] . "<span class='text-danger'> *</span>"; ?></label>
+              <input class="form-control" wingspan="text" name="plane-wingspan" id="plane-wingspan" required>
             </div>
             <div class="col-12 col-md-2">
-              <label for="plane-winglets"><?php echo $language[$l]["label-plane-winglets"]; ?></label>
+              <label for="plane-winglets"><?php echo $language[$l]["label-plane-winglets"] . "<span class='text-danger'> *</span>"; ?></label>
               <select class="form-control" name="plane-winglets" id="plane-winglets">
                 <option value="0" selected disabled><?php echo $language[$l]["select-option-winglets-1"]; ?></option>
                 <option value="1"><?php echo $language[$l]["select-option-winglets-2"]; ?></option>
@@ -264,7 +294,7 @@ if (isset($_POST["submit"])) {
               </select>
             </div>
             <div class="col-12 col-md-2">
-              <label for="plane-engine"><?php echo $language[$l]["label-plane-engine"]; ?></label>
+              <label for="plane-engine"><?php echo $language[$l]["label-plane-engine"] . "<span class='text-danger'> *</span>"; ?></label>
               <select class="form-control" name="plane-engine" id="plane-engine">
                 <option value="0" selected disabled><?php echo $language[$l]["select-option-engine-1"]; ?></option>
                 <option value="1"><?php echo $language[$l]["select-option-engine-2"]; ?></option>
@@ -286,9 +316,9 @@ if (isset($_POST["submit"])) {
           <legend><?php echo $language[$l]["fieldset-3"]; ?></legend>
           <div class="row align-items-center">
             <div class="col-12 col-md-2">
-              <label for="competition-class"><?php echo $language[$l]["label-competition-class"]; ?></label>
+              <label for="competition-class"><?php echo $language[$l]["label-competition-class"] . "<span class='text-danger'> *</span>"; ?></label>
               <!--===== Classes selected from database =====-->
-              <select class="form-control" name="competition-class" id="competition-class">
+              <select class="form-control" name="competition-class" id="competition-class" required>
                 <?php
                 if ($l == 0) {
                   echo "<option value = '0'>Valitse luokka</option>";
@@ -326,8 +356,8 @@ if (isset($_POST["submit"])) {
           <legend><?php echo $language[$l]["fieldset-4"]; ?></legend>
           <div class="row">
             <div class="col-12 col-md-3">
-              <label for="accomodation"><?php echo $language[$l]["label-accomodation"]; ?></label>
-              <select class="form-control" name="accomodation" id="accomodation">
+              <label for="accomodation"><?php echo $language[$l]["label-accomodation"] . "<span class='text-danger'> *</span>"; ?></label>
+              <select class="form-control" name="accomodation" id="accomodation" required>
                 <?php
                 echo "<option value='0' selected disabled>" . $language[$l]['choose-accomodation'] . "</option>";
                 echo "<option value='1'>" . $language[$l]['accomodation-motel'] . "</option>";
