@@ -48,7 +48,7 @@ if ($l == 0) {
 
 //HANDLING ENTRY FORM INPUTS
 if (isset($_POST["submit"])) {
-  
+
   //Pilot first name
   if (isset($_POST["pilot-first-name"])) {
     $firstName = checkInput($_POST["pilot-first-name"]);
@@ -142,7 +142,7 @@ if (isset($_POST["submit"])) {
   }
 
   //******* UPLOAD OF IGC FILES *********/
-  if (isset($_FILES["flight-logger-1"])) {
+  if ($_FILES["flight-logger-1"]["error"] != 4 || $_FILES['flight-logger-1']['size'] != 0) {
     $target_dir = "igcfiles/";
     $target_file = basename($_FILES["flight-logger-1"]["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -166,7 +166,7 @@ if (isset($_POST["submit"])) {
     $logger1 = 0;
   }
 
-  if (isset($_FILES["flight-logger-2"])) {
+  if ($_FILES["flight-logger-2"]["error"] != 4 || $_FILES['flight-logger-2']['size'] != 0) {
     $target_dir = "igcfiles/";
     $target_file = basename($_FILES["flight-logger-2"]["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -198,25 +198,25 @@ if (isset($_POST["submit"])) {
     $entryTime = $et->format("Y-m-d H:i:s");
     $np = new Pilots();
     $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime);
+
     if ($newPilot == 1) {
       header("location:" . $siteUrl);
     } else if ($newPilot == 0) {
-      $success = "Tallennus ei onnistunut";
+      $success = "<div class='alert alert-danger'>Jokin meni pieleen... :( Yritä hetken kuluttua uudelleen.</div>";
     }
   } else {
-    $success = "<div class='alert alert-danger text-center'>";
+    $warnings = "<div class='alert alert-danger text-center mx-3'><h6>".$language[$l]["error-form-header"]."</h6>";
     foreach ($errorArray as $key => $value) {
-      echo $success .= $value . "<br>";
+      $warnings .= $value . "<br>";
     }
-    echo "</div>";
+    $warnings .= "</div>";
+ 
   }
 } //End of submit
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -262,11 +262,11 @@ if (isset($_POST["submit"])) {
         </div>";
       }
       ?>
-      <?php if (isset($success)) {
-        echo $success;
-      } ?>
     </div>
     <div class="enrollment-form border p-4 p-md-3">
+      <?php if (isset($warnings)) {
+        echo $warnings;
+      } ?>
       <h4><?php echo $language[$l]["header"]; ?></h4>
       <form name="enrollment" id="enrollment-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
         <!--===== PILOT INFO =====-->
@@ -275,23 +275,33 @@ if (isset($_POST["submit"])) {
           <div class="row">
             <div class="col-12 col-md-2">
               <label for="pilot-first-name"><?php echo $language[$l]["label-pilot-first-name"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" type="text" name="pilot-first-name" id="pilot-first-name" required>
+              <input class="form-control" type="text" name="pilot-first-name" id="pilot-first-name" value="<?php if (isset($firstName)) {
+                                                                                                              echo $firstName;
+                                                                                                            } ?>" required>
             </div>
             <div class="col-12 col-md-2">
               <label for="pilot-last-name"><?php echo $language[$l]["label-pilot-last-name"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" type="text" name="pilot-last-name" id="pilot-last-name" required>
+              <input class="form-control" type="text" name="pilot-last-name" id="pilot-last-name" value="<?php if (isset($lastName)) {
+                                                                                                            echo $lastName;
+                                                                                                          } ?>" required>
             </div>
             <div class="col-12 col-md-2">
               <label for="pilot-phone"><?php echo $language[$l]["label-pilot-phone"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" type="text" name="pilot-phone" id="pilot-phone" required>
+              <input class="form-control" type="text" name="pilot-phone" id="pilot-phone" value="<?php if (isset($phone)) {
+                                                                                                    echo $phone;
+                                                                                                  } ?>" required>
             </div>
             <div class="col-12 col-md-3">
               <label for="pilot-email"><?php echo $language[$l]["label-pilot-email"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" type="email" name="pilot-email" id="pilot-email" required>
+              <input class="form-control" type="email" name="pilot-email" id="pilot-email" value="<?php if (isset($email)) {
+                                                                                                    echo $email;
+                                                                                                  } ?>" required>
             </div>
             <div class="col-12 col-md-3">
               <label for="pilot-club"><?php echo $language[$l]["label-pilot-club"]; ?></label>
-              <input class="form-control" type="text" name="pilot-club" id="pilot-club">
+              <input class="form-control" type="text" name="pilot-club" id="pilot-club" value="<?php if (isset($club)) {
+                                                                                                  echo $club;
+                                                                                                } ?>">
             </div>
           </div>
         </fieldset>
@@ -302,19 +312,27 @@ if (isset($_POST["submit"])) {
           <div class="row">
             <div class="col-12 col-md-2">
               <label for="plane-type"><?php echo $language[$l]["label-plane-type"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" type="text" name="plane-type" id="plane-type" required>
+              <input class="form-control" type="text" name="plane-type" id="plane-type" value="<?php if (isset($glider)) {
+                                                                                                  echo $glider;
+                                                                                                } ?>" required>
             </div>
             <div class="col-12 col-md-2">
               <label for="plane-register"><?php echo $language[$l]["label-plane-register"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" register="text" name="plane-register" id="plane-register" required>
+              <input class="form-control" register="text" name="plane-register" id="plane-register" value="<?php if (isset($register)) {
+                                                                                                              echo $register;
+                                                                                                            } ?>" required>
             </div>
             <div class="col-12 col-md-2">
               <label for="plane-competition-sign"><?php echo $language[$l]["label-plane-competition-sign"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" competition-sign="text" name="plane-competition-sign" id="plane-competition-sign" required>
+              <input class="form-control" competition-sign="text" name="plane-competition-sign" id="plane-competition-sign" value="<?php if (isset($competitionSign)) {
+                                                                                                                                      echo $competitionSign;
+                                                                                                                                    } ?>" required>
             </div>
             <div class="col-12 col-md-2">
               <label for="plane-wingspan"><?php echo $language[$l]["label-plane-wingspan"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" wingspan="text" name="plane-wingspan" id="plane-wingspan" required>
+              <input class="form-control" wingspan="text" name="plane-wingspan" id="plane-wingspan" value="<?php if (isset($wingspan)) {
+                                                                                                              echo $wingspan;
+                                                                                                            } ?>" required>
             </div>
             <div class="col-12 col-md-2">
               <label for="plane-winglets"><?php echo $language[$l]["label-plane-winglets"] . "<span class='text-danger'> *</span>"; ?></label>
@@ -328,16 +346,18 @@ if (isset($_POST["submit"])) {
               <label for="plane-engine"><?php echo $language[$l]["label-plane-engine"] . "<span class='text-danger'> *</span>"; ?></label>
               <select class="form-control" name="plane-engine" id="plane-engine">
                 <option value="0" selected disabled><?php echo $language[$l]["select-option-engine-1"]; ?></option>
-                <option value="1"><?php echo $language[$l]["select-option-engine-2"]; ?></option>
-                <option value="2"><?php echo $language[$l]["select-option-engine-3"]; ?></option>
-                <option value="3"><?php echo $language[$l]["select-option-engine-4"]; ?></option>
+                <option value='1' <?php if(isset($engine) && $engine == 1){echo "selected";} ?>><?php echo $language[$l]['select-option-engine-2']; ?></option>
+                <option value="2" <?php if(isset($engine) && $engine == 2){echo "selected";} ?>><?php echo $language[$l]["select-option-engine-3"]; ?></option>
+                <option value="3" <?php if(isset($engine) && $engine == 3){echo "selected";} ?>><?php echo $language[$l]["select-option-engine-4"]; ?></option>
               </select>
             </div>
           </div>
           <div class="row mt-2">
             <div class="col-12 col-md-2">
               <label for="flarm-id">Flarm ID</label>
-              <input class="form-control" type="text" name="flarm-id" id="flarm-id">
+              <input class="form-control" type="text" name="flarm-id" id="flarm-id" value="<?php if (isset($flarmId)) {
+                                                                                              echo $flarmId;
+                                                                                            } ?>">
             </div>
           </div>
         </fieldset>
@@ -367,7 +387,7 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-3">
               <label for="flight-logger-1" class="form-label"><?php echo $language[$l]["label-logger-1"]; ?></label>
-              <input class="form-control" type="file" id="flight-logger-1" name="flight-logger-1" required>
+              <input class="form-control" type="file" id="flight-logger-1" name="flight-logger-1">
             </div>
             <div class="col-12 col-md-3">
               <label for="flight-logger-2" class="form-label"><?php echo $language[$l]["label-logger-2"]; ?></label>
@@ -375,7 +395,7 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-3">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="checkbox-logger-files" name="checkbox-logger-files" value="" onchange="flightLoggerOne()">
+                <input class="form-check-input" type="checkbox" id="checkbox-logger-files" name="checkbox-logger-files" value="">
                 <label class="form-check-label text-danger"><?php echo $language[$l]["label-checkbox-logger-files"]; ?></label>
               </div>
             </div>
