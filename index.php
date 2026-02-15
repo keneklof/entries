@@ -5,9 +5,6 @@ include "functions.php";
 include "competition.php";
 //echo "<span class='text-light'>".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."</span>";
 //COMPETION VARIABLES
-$errorArray = array();
-$erroUpload = array();
-$success = "";
 date_default_timezone_set("Europe/Helsinki");
 //DATABASE SELECTIONS
 //Select competition info
@@ -15,7 +12,7 @@ $c = new Competitions();
 $competitionInfo = $c->selectCompetitionInfo($competitionId);
 //Select competition classes
 $competitonClasses = $c->selectCompetitonClasses($competitionId);
-
+$errorArray = [];
 //LANGUAGE (0 = FINNISH, 1 = ENGLISH)
 if ($competitionInfo[0]["competition_language"] == "FIN") {
   $l = 0;
@@ -51,7 +48,7 @@ if ($l == 0) {
 
 //HANDLING ENTRY FORM INPUTS
 if (isset($_POST["submit"])) {
-
+  
   //Pilot first name
   if (isset($_POST["pilot-first-name"])) {
     $firstName = checkInput($_POST["pilot-first-name"]);
@@ -93,6 +90,8 @@ if (isset($_POST["submit"])) {
   //Plane competition sign
   if (isset($_POST["plane-competition-sign"])) {
     $competitionSign = strtoupper(checkInput($_POST["plane-competition-sign"]));
+    //Creating an indidual string for the pilot
+    $pilotLinkId = strtolower($competitionSign) . uniqid("sm2026");
   }
 
   //Plane wingspan
@@ -104,14 +103,14 @@ if (isset($_POST["submit"])) {
   if (isset($_POST["plane-winglets"]) && $_POST["plane-winglets"] != 0) {
     $winglets = checkInput($_POST["plane-winglets"]);
   } else {
-    $errorArray["winglets"] = $language[$l]["error-form-winglets"];
+    array_push($errorArray, $language[$l]["error-form-winglets"]);
   }
 
   //Plane engine
   if (isset($_POST["plane-engine"]) && $_POST["plane-engine"] != 0) {
     $engine = checkInput($_POST["plane-engine"]);
   } else {
-    $errorArray["engine"] = $language[$l]["error-form-engine"];
+    array_push($errorArray, $language[$l]["error-form-engine"]);
   }
 
   //Plane Flarm ID
@@ -125,14 +124,14 @@ if (isset($_POST["submit"])) {
   if (isset($_POST["competition-class"]) && $_POST["competition-class"] != 0) {
     $competitionClass = checkInput($_POST["competition-class"]);
   } else {
-    $errorArray["competition-class"] = $language[$l]["error-form-competition-class"];
+    array_push($errorArray, $language[$l]["error-form-competition-class"]);
   }
 
   //Pilot accomodation
   if (isset($_POST["accomodation"]) && $_POST["accomodation"] != 0) {
     $accomodation = checkInput($_POST["accomodation"]);
   } else {
-    $errorArray["accomodation"] = $language[$l]["error-form-accomodation"];
+    array_push($errorArray, $language[$l]["error-form-accomodation"]);
   }
 
   //Other info
@@ -143,7 +142,7 @@ if (isset($_POST["submit"])) {
   }
 
   //******* UPLOAD OF IGC FILES *********/
-  if ($_FILES["flight-logger-1"]["name"] != "" && $_FILES["flight-logger-1"]["size"] != 0) {
+  if (isset($_FILES["flight-logger-1"])) {
     $target_dir = "igcfiles/";
     $target_file = basename($_FILES["flight-logger-1"]["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -152,36 +151,67 @@ if (isset($_POST["submit"])) {
     $priority = 1;
 
     if ($fileType != 'igc') {
-      $errorUpload['igc'] = 'e';
+      array_push($errorArray, $language[$l]["error-form-igc-1"]);
     }
 
-    if ($fileSize > 5000000) {
-      $errorUpload['fs'] = 'e';
+    if ($fileSize > 3000000) {
+      array_push($errorArray, $language[$l]["error-form-file-1-to-big"]);
     }
 
-    if (empty($errorUpload)) {
+    if (empty($errorArray)) {
       move_uploaded_file($_FILES['flight-logger-1']['tmp_name'], $target_dir . $competitionSign . "-" . $priority . "-" . $target_file);
       $logger1 = 1;
     }
+  } else {
+    $logger1 = 0;
   }
 
+  if (isset($_FILES["flight-logger-2"])) {
+    $target_dir = "igcfiles/";
+    $target_file = basename($_FILES["flight-logger-2"]["name"]);
+    $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $fileSize = $_FILES["flight-logger-2"]["size"];
+
+    $priority = 2;
+
+    if ($fileType != 'igc') {
+      array_push($errorArray, $language[$l]["error-form-igc-2"]);
+    }
+
+    if ($fileSize > 3000000) {
+      array_push($errorArray, $language[$l]["error-form-file-2-to-big"]);
+    }
+
+    if (empty($errorArray)) {
+      move_uploaded_file($_FILES['flight-logger-2']['tmp_name'], $target_dir . $competitionSign . "-" . $priority . "-" . $target_file);
+      $logger2 = 1;
+    }
+  } else {
+    $logger2 = 0;
+  }
   //******* UPLOAD OF IGC FILES END *********/
 
-  //Entry time
-  $et = new DateTime();
-  $entryTime = $et->format("Y-m-d H:i:s");
-
-  $p = new Pilots();
-  $newPilot = $p->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, 0, $entryTime);
-
-
-  //ENTRY SUCCESS
-  if ($newPilot == 1) {
-    header("location:" . $siteUrl);
-  } else if ($newPilot == 0) {
-    $success = "Tallennus ei onnistunut";
+  if (empty($errorArray)) {
+    //ENTRY SUCCESS
+    $success = "";
+    $et = new DateTime();
+    $entryTime = $et->format("Y-m-d H:i:s");
+    $np = new Pilots();
+    $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime);
+    if ($newPilot == 1) {
+      header("location:" . $siteUrl);
+    } else if ($newPilot == 0) {
+      $success = "Tallennus ei onnistunut";
+    }
+  } else {
+    $success = "<div class='alert alert-danger text-center'>";
+    foreach ($errorArray as $key => $value) {
+      echo $success .= $value . "<br>";
+    }
+    echo "</div>";
   }
 } //End of submit
+
 ?>
 
 <!DOCTYPE html>
@@ -232,8 +262,9 @@ if (isset($_POST["submit"])) {
         </div>";
       }
       ?>
-      <?php echo $success; ?>
-
+      <?php if (isset($success)) {
+        echo $success;
+      } ?>
     </div>
     <div class="enrollment-form border p-4 p-md-3">
       <h4><?php echo $language[$l]["header"]; ?></h4>
