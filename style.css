@@ -2,13 +2,19 @@
   position: relative;
   height: 300px;
   background-repeat: no-repeat;
-  background-size:cover;
+  background-size: cover;
   background-position: center;
 }
 
 .footer {
-  box-sizing:content-box;
-  height: 100px;
+  box-sizing: content-box;
+  background-color: #e2e3e5;
+}
+
+@media only screen and (max-width: 600px) {
+  .footer {
+    font-size: .7em!important;
+  }
 }
 
 .info-links {

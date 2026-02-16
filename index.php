@@ -3,7 +3,6 @@ include "autoloader.php";
 include "language.php";
 include "functions.php";
 include "competition.php";
-//echo "<span class='text-light'>".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."</span>";
 //COMPETION VARIABLES
 date_default_timezone_set("Europe/Helsinki");
 //DATABASE SELECTIONS
@@ -13,7 +12,7 @@ $competitionInfo = $c->selectCompetitionInfo($competitionId);
 //Select competition classes
 $competitonClasses = $c->selectCompetitonClasses($competitionId);
 $errorArray = [];
-//LANGUAGE (0 = FINNISH, 1 = ENGLISH)
+//LANGUAGE (0 = FINNISH, 1 = ENGLISH, SELECTED FROM DATABASE)
 if ($competitionInfo[0]["competition_language"] == "FIN") {
   $l = 0;
 } else if ($competitionInfo[0]["competition_language"] == "ENG") {
@@ -39,11 +38,11 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
 if ($l == 0) {
   $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
   $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEnrolled = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Ilmoittautuneet</a>";
+  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_entries'] . "' target='_blank'>Ilmoittautuneet</a>";
 } else if ($l == 1) {
   $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
   $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEnrolled = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_enrolled'] . "' target='_blank'>Enrolled</a>";
+  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_entries'] . "' target='_blank'>Enrolled</a>";
 }
 
 //HANDLING ENTRY FORM INPUTS
@@ -200,23 +199,23 @@ if (isset($_POST["submit"])) {
     $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime);
 
     if ($newPilot == 1) {
-      header("location:" . $siteUrl);
+      header("location:" . $siteConfirmationUrl);
     } else if ($newPilot == 0) {
       $success = "<div class='alert alert-danger'>Jokin meni pieleen... :( Yritä hetken kuluttua uudelleen.</div>";
     }
   } else {
-    $warnings = "<div class='alert alert-danger text-center mx-3'><h6>".$language[$l]["error-form-header"]."</h6>";
+    $warnings = "<div class='alert alert-danger text-center mx-3'><h6>" . $language[$l]["error-form-header"] . "</h6>";
     foreach ($errorArray as $key => $value) {
       $warnings .= $value . "<br>";
     }
     $warnings .= "</div>";
- 
   }
 } //End of submit
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -249,7 +248,7 @@ if (isset($_POST["submit"])) {
           "<h5 class='mt-3 mb-3'>LINKKEJÄ</h5>
         <div class='row justify-content-center justify-content-md-start'>
         <div class='col-8 col-md-3'>" . $linkWebSite . "</div>
-        <div class='col-8 col-md-3'>" . $linkEnrolled . "</div>
+        <div class='col-8 col-md-3'>" . $linkEntries . "</div>
         <div class='col-8 col-md-3'>" . $linkSoaringSpot . "</div>
         </div>";
       } else if ($l == 1) {
@@ -257,7 +256,7 @@ if (isset($_POST["submit"])) {
           "<h5 class='mt-3'>LINKS</h5>
         <div class='row justify-content-center justify-content-md-start'>
         <div class='col-8 col-md-3'>" . $linkWebSite . "</div>
-        <div class='col-8 col-md-3'>" . $linkEnrolled . "</div>
+        <div class='col-8 col-md-3'>" . $linkEntries . "</div>
         <div class='col-8 col-md-3'>" . $linkSoaringSpot . "</div>
         </div>";
       }
@@ -338,17 +337,27 @@ if (isset($_POST["submit"])) {
               <label for="plane-winglets"><?php echo $language[$l]["label-plane-winglets"] . "<span class='text-danger'> *</span>"; ?></label>
               <select class="form-control" name="plane-winglets" id="plane-winglets">
                 <option value="0" selected disabled><?php echo $language[$l]["select-option-winglets-1"]; ?></option>
-                <option value="1"><?php echo $language[$l]["select-option-winglets-2"]; ?></option>
-                <option value="2"><?php echo $language[$l]["select-option-winglets-3"]; ?></option>
+                <option value="1" <?php if (isset($winglets) && $winglets == 1) {
+                                    echo "selected";
+                                  } ?>><?php echo $language[$l]["select-option-winglets-2"]; ?></option>
+                <option value="2" <?php if (isset($winglets) && $winglets == 2) {
+                                    echo "selected";
+                                  } ?>><?php echo $language[$l]["select-option-winglets-3"]; ?></option>
               </select>
             </div>
             <div class="col-12 col-md-2">
               <label for="plane-engine"><?php echo $language[$l]["label-plane-engine"] . "<span class='text-danger'> *</span>"; ?></label>
               <select class="form-control" name="plane-engine" id="plane-engine">
                 <option value="0" selected disabled><?php echo $language[$l]["select-option-engine-1"]; ?></option>
-                <option value='1' <?php if(isset($engine) && $engine == 1){echo "selected";} ?>><?php echo $language[$l]['select-option-engine-2']; ?></option>
-                <option value="2" <?php if(isset($engine) && $engine == 2){echo "selected";} ?>><?php echo $language[$l]["select-option-engine-3"]; ?></option>
-                <option value="3" <?php if(isset($engine) && $engine == 3){echo "selected";} ?>><?php echo $language[$l]["select-option-engine-4"]; ?></option>
+                <option value='1' <?php if (isset($engine) && $engine == 1) {
+                                    echo "selected";
+                                  } ?>><?php echo $language[$l]['select-option-engine-2']; ?></option>
+                <option value="2" <?php if (isset($engine) && $engine == 2) {
+                                    echo "selected";
+                                  } ?>><?php echo $language[$l]["select-option-engine-3"]; ?></option>
+                <option value="3" <?php if (isset($engine) && $engine == 3) {
+                                    echo "selected";
+                                  } ?>><?php echo $language[$l]["select-option-engine-4"]; ?></option>
               </select>
             </div>
           </div>
@@ -374,12 +383,20 @@ if (isset($_POST["submit"])) {
                 if ($l == 0) {
                   echo "<option value = '0'>Valitse luokka</option>";
                   foreach ($competitonClasses as $class) {
-                    echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_fin'] . "</option>";
+                    if (isset($competitionClass) && $competitionClass == $class['class_id']) {
+                      echo "<option value='" . $class['class_id'] . "' selected>" . $class['class_name_fin'] . "</option>";
+                    } else {
+                      echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_fin'] . "</option>";
+                    }
                   }
                 } else if ($l == 1) {
                   echo "<option value = '0'>Choose class</option>";
                   foreach ($competitonClasses as $class) {
-                    echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_eng'] . "</option>";
+                    if (isset($competitionClass) && $competitionClass == $class['class_id']) {
+                      echo "<option value='" . $class['class_id'] . "' selected>" . $class['class_name_eng'] . "</option>";
+                    } else {
+                      echo "<option value='" . $class['class_id'] . "'>" . $class['class_name_eng'] . "</option>";
+                    }
                   }
                 }
                 ?>
@@ -393,10 +410,9 @@ if (isset($_POST["submit"])) {
               <label for="flight-logger-2" class="form-label"><?php echo $language[$l]["label-logger-2"]; ?></label>
               <input class="form-control" type="file" id="flight-logger-2" name="flight-logger-2">
             </div>
-            <div class="col-12 col-md-3">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="checkbox-logger-files" name="checkbox-logger-files" value="">
-                <label class="form-check-label text-danger"><?php echo $language[$l]["label-checkbox-logger-files"]; ?></label>
+            <div class="col-12 col-md-4">
+              <div class="alert alert-secondary w-100">
+                <small>IGC-tiedostot on toimitettava kilpailun järjestäjälle viimeistään ensimmäistä kilpailupäivää edeltävänä päivänä. Jouduttaaksesi kilpailun järjestelyjä pyri lähettämään tiedostot mahdollisimman nopeasti, mieluiten ilmoittautumisen yhteydessä.</small>
               </div>
             </div>
           </div>
@@ -410,13 +426,38 @@ if (isset($_POST["submit"])) {
               <label for="accomodation"><?php echo $language[$l]["label-accomodation"] . "<span class='text-danger'> *</span>"; ?></label>
               <select class="form-control" name="accomodation" id="accomodation" required>
                 <?php
+                $selected1 = '';
+                $selected2 = '';
+                $selected3 = '';
+                $selected4 = '';
+                $selected5 = '';
+                $selected6 = '';
+                if (isset($accomodation) && $accomodation == 1) {
+                  $selected1 = 'selected';
+                }
+                if (isset($accomodation) && $accomodation == 2) {
+                  $selected2 = 'selected';
+                }
+                if (isset($accomodation) && $accomodation == 3) {
+                  $selected3 = 'selected';
+                }
+                if (isset($accomodation) && $accomodation == 4) {
+                  $selected4 = 'selected';
+                }
+                if (isset($accomodation) && $accomodation == 5) {
+                  $selected5 = 'selected';
+                }
+                if (isset($accomodation) && $accomodation == 6) {
+                  $selected6 = 'selected';
+                }
+
                 echo "<option value='0' selected disabled>" . $language[$l]['choose-accomodation'] . "</option>";
-                echo "<option value='1'>" . $language[$l]['accomodation-motel'] . "</option>";
-                echo "<option value='2'>" . $language[$l]['accomodation-season'] . "</option>";
-                echo "<option value='3'>" . $language[$l]['accomodation-week'] . "</option>";
-                echo "<option value='4'>" . $language[$l]['accomodation-tent'] . "</option>";
-                echo "<option value='5'>" . $language[$l]['accomodation-no'] . "</option>";
-                echo "<option value='6'>" . $language[$l]['accomodation-cns'] . "</option>";
+                echo "<option value='1' " . $selected1 . ">" . $language[$l]['accomodation-motel'] . "</option>";
+                echo "<option value='2' " . $selected2 . ">" . $language[$l]['accomodation-season'] . "</option>";
+                echo "<option value='3' " . $selected3 . ">" . $language[$l]['accomodation-week'] . "</option>";
+                echo "<option value='4' " . $selected4 . ">" . $language[$l]['accomodation-tent'] . "</option>";
+                echo "<option value='5' " . $selected5 . ">" . $language[$l]['accomodation-no'] . "</option>";
+                echo "<option value='6' " . $selected6 . ">" . $language[$l]['accomodation-cns'] . "</option>";
                 ?>
               </select>
             </div>
@@ -433,8 +474,26 @@ if (isset($_POST["submit"])) {
         </div>
       </form>
     </div>
-    <div class="footer bg-secondary">
-      <!--===== FOOTER CONTENT =====-->
+    <div class="footer py-4">
+      <h5 class="text-center">YHTEYSTIEDOT</h5>
+      <h6 class="text-center"><?php echo $competitionInfo[0]["competition_organiser"]; ?></h6>
+      <div class="row justify-content-center p-4 p-md-0">
+        <div class=" col-6 col-md-2">
+          <?php echo $competitionInfo[0]["competition_organiser_phone"] . " "; ?>
+        </div>
+        <div class="col-6 col-md-2">
+          <?php echo $competitionInfo[0]["competition_organiser_email"]; ?>
+        </div>
+      </div>
+      <h6 class="text-center">Kilpailunjohtaja</h6>
+      <div class="row justify-content-center p-4 p-md-0">
+        <div class="col-6 col-md-2">
+          <?php echo $competitionInfo[0]["competition_director_phone"] . " "; ?>
+        </div>
+        <div class="col-6 col-md-2">
+          <?php echo $competitionInfo[0]["competition_director_email"]; ?>
+        </div>
+      </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
