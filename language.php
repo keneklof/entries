@@ -49,6 +49,8 @@ $language = array(
     "accomodation-cns"=>"En osaa sanoa vielä",
     "placeholder-info"=>"Avustaja 1: nimi + puhelinnumero\nAvustaja 2: nimi + puhelinnumero\nHätäyhteyshenkilö: nimi + puhelinnumero\nMuu info järjestäjälle",
     "button-enrollment-send"=>"Lähetä",
+    "entries-title"=>"Ilmoittautuneet",
+    "entries-header"=>"Ilmoittautuneet",
   ),
   array(
     "header" => "ENROLLMENT",
@@ -90,6 +92,8 @@ $language = array(
     "accomodation-cns"=>"I don't know yet",
     "placeholder-info"=>"Assistant 1: name and phone number\nAssistant 2: name and phone number\nEmergency contact person: name and phone number\nOther info to the organisation",
     "button-enrollment-send"=>"Send",
+    "entries-title"=>"Entries",
+    "entries-header"=>"Entries",
   )
 )
 ?>

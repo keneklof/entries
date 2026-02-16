@@ -1,14 +1,6 @@
 <?php
-spl_autoload_register('AutoLoad');
-function AutoLoad($class)
-{
-  $path = "../classes/";
-  $extension = ".class.php";
-  $fullpath = $path . $class . $extension;
-  include_once $fullpath;
-}
 include "../functions.php";
-include "../competition.php";
+include "../variables.php";
 
 $c= new Competitions();
 $info = $c->selectCompetitionInfo($competitionId);

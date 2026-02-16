@@ -2,23 +2,33 @@
 include "autoloader.php";
 include "language.php";
 include "functions.php";
-include "competition.php";
-//COMPETION VARIABLES
-date_default_timezone_set("Europe/Helsinki");
-//DATABASE SELECTIONS
-//Select competition info
-$c = new Competitions();
-$competitionInfo = $c->selectCompetitionInfo($competitionId);
-//Select competition classes
-$competitonClasses = $c->selectCompetitonClasses($competitionId);
-$errorArray = [];
-//LANGUAGE (0 = FINNISH, 1 = ENGLISH, SELECTED FROM DATABASE)
-if ($competitionInfo[0]["competition_language"] == "FIN") {
-  $l = 0;
-} else if ($competitionInfo[0]["competition_language"] == "ENG") {
-  $l = 1;
-}
 
+//COMPETITION ID
+$competitionId = 1;
+$c = new Competitions();
+
+//SELECT ALL COMPETITION INFO
+$competitionInfo = $c->selectCompetitionInfo($competitionId);
+
+//SELECT COMPETITION LANGUAGE
+$l = $c->selectCompetitionLanguage($competitionId);
+
+//SELECT COMPETITION CLASSES
+$competitionClasses = $c->selectCompetitionClasses($competitionId);
+
+//LOCAL TIMEZONE
+date_default_timezone_set("Europe/Helsinki");
+
+//CREATING COMPETITION DATES
+$cs = new DateTime($competitionInfo[0]["competition_start"]);
+$ce = new DateTime($competitionInfo[0]["competition_end"]);
+$competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
+
+//LINKS
+$confirmationUrl = "https://digiken.fi" . dirname($_SERVER["REQUEST_URI"]) . "/confirmation.php";
+$entriesUrl = "https://digiken.fi" . dirname($_SERVER["REQUEST_URI"], 3) . "pilots/entries.php";
+
+//HEADER INFO
 $competitionTitle = $competitionInfo[0]["competition_name"];
 $competitionLocation = $competitionInfo[0]["competition_location"];
 
@@ -26,6 +36,9 @@ $competitionLocation = $competitionInfo[0]["competition_location"];
 $cs = new DateTime($competitionInfo[0]["competition_start"]);
 $ce = new DateTime($competitionInfo[0]["competition_end"]);
 $competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
+
+//ERROR ARRAY FOR FORM INPUTS
+$errorArray = [];
 
 //HEADER STYLING
 //Background image size 1000x300
@@ -38,11 +51,11 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
 if ($l == 0) {
   $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
   $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_entries'] . "' target='_blank'>Ilmoittautuneet</a>";
+  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl . "' target='_blank'>Ilmoittautuneet</a>";
 } else if ($l == 1) {
   $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
   $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_entries'] . "' target='_blank'>Enrolled</a>";
+  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl. "' target='_blank'>Enrolled</a>";
 }
 
 //HANDLING ENTRY FORM INPUTS
@@ -199,7 +212,7 @@ if (isset($_POST["submit"])) {
     $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime);
 
     if ($newPilot == 1) {
-      header("location:" . $siteConfirmationUrl);
+      header("location:" . $confirmationUrl);
     } else if ($newPilot == 0) {
       $success = "<div class='alert alert-danger'>Jokin meni pieleen... :( Yritä hetken kuluttua uudelleen.</div>";
     }
@@ -382,7 +395,7 @@ if (isset($_POST["submit"])) {
                 <?php
                 if ($l == 0) {
                   echo "<option value = '0'>Valitse luokka</option>";
-                  foreach ($competitonClasses as $class) {
+                  foreach ($competitionClasses as $class) {
                     if (isset($competitionClass) && $competitionClass == $class['class_id']) {
                       echo "<option value='" . $class['class_id'] . "' selected>" . $class['class_name_fin'] . "</option>";
                     } else {

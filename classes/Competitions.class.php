@@ -14,12 +14,29 @@ class Competitions extends Database
       $stmt   = $this->connect()->query($sql);
       $competitions = $stmt->fetchAll();
     } catch (PDOException $e) {
-      file_put_contents('error_fetching_competition.txt', date('d.m.Y G:i') . 'Fetching competition:' . $e->getMessage() . "\n", FILE_APPEND);
+      file_put_contents('error_fetching_competition_info.txt', date('d.m.Y G:i') . 'Fetching competition:' . $e->getMessage() . "\n", FILE_APPEND);
     }
     return $competitions;
   }
 
-  public function selectCompetitonClasses($compId)
+  public function selectCompetitionLanguage($compId)
+  {
+    //FETCH COMPETITION LANGUAGE
+    try {
+      $sql    = ("SELECT competition_language FROM competitions WHERE competition_id = '$compId'");
+      $stmt   = $this->connect()->query($sql);
+      $l = $stmt->fetchAll();
+    } catch (PDOException $e) {
+      file_put_contents('error_fetching_language.txt', date('d.m.Y G:i') . 'Fetching competition:' . $e->getMessage() . "\n", FILE_APPEND);
+    }
+    if ($l[0]["competition_language"] == "FIN") {
+      return 0;
+    } else if ($l[0]["competition_language"] == "ENG") {
+      return 1;
+    }
+  }
+
+  public function selectCompetitionClasses($compId)
   {
 
     try {
