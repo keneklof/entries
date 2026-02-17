@@ -26,7 +26,7 @@ $competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
 
 //LINKS
 $confirmationUrl = "https://digiken.fi" . dirname($_SERVER["REQUEST_URI"]) . "/confirmation.php";
-$entriesUrl = "https://digiken.fi" . dirname($_SERVER["REQUEST_URI"], 3) . "pilots/entries.php";
+$entriesUrl = "https://digiken.fi" . $_SERVER["REQUEST_URI"] . "pilots/entries.php";
 
 //HEADER INFO
 $competitionTitle = $competitionInfo[0]["competition_name"];
@@ -55,7 +55,7 @@ if ($l == 0) {
 } else if ($l == 1) {
   $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
   $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl. "' target='_blank'>Enrolled</a>";
+  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl. "' target='_blank'>Entries</a>";
 }
 
 //HANDLING ENTRY FORM INPUTS

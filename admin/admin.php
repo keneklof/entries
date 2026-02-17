@@ -1,6 +1,5 @@
 <?php
 include "../functions.php";
-include "../variables.php";
 
 $c= new Competitions();
 $info = $c->selectCompetitionInfo($competitionId);

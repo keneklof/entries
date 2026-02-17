@@ -1,0 +1,12 @@
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  include(./functions.php): Failed to open stream: No such file or directory in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 2
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  include(): Failed opening './functions.php' for inclusion (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 2
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  include(./language.php): Failed to open stream: No such file or directory in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 3
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  include(): Failed opening './language.php' for inclusion (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 3
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  Undefined variable $language in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 12
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  Undefined variable $l in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 12
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  Trying to access array offset on value of type null in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 12
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  Trying to access array offset on value of type null in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 12
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  Undefined variable $language in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 24
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  Undefined variable $l in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 24
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  Trying to access array offset on value of type null in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 24
+[17-Feb-2026 14:14:08 Europe/Helsinki] PHP Warning:  Trying to access array offset on value of type null in /home2/xosiponx/public_html/entries/jannenkisat2026/pilots/entries.php on line 24
