@@ -5,7 +5,15 @@ include "../language.php";
 
 $competitionId = 1;
 $c = new Competitions();
+//SELECT COMPETITON LANGUAGE
 $l = $c->selectCompetitionLanguage($competitionId);
+
+$cp = new Pilots();
+//SELECT COMPETITON PILOTS
+$pilots = $cp->selectCompetitionPilots($competitionId);
+
+//SELECT COMPETITON CLASSES
+$classes = $c->selectCompetitionClasses($competitionId);
 
 ?>
 <!DOCTYPE html>
@@ -27,11 +35,16 @@ $l = $c->selectCompetitionLanguage($competitionId);
     </header>
     <h3 class="text-start py-3"><?php echo $language[$l]['entries-header']; ?></h3>
     <div class="container">
-      <div class="table-responsive">
-        <table class="table table-striped">
-
-        </table>
-      </div>
+      <?php
+       foreach ($classes as $class) {
+        if($l == 0){
+        echo $class["class_name_fin"];
+        } else if ($l == 1){
+        echo $class["class_name_eng"];
+        }
+       } 
+      ?>
+      
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

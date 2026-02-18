@@ -20,4 +20,17 @@ class Pilots extends Database
       array_push($entryInfo, $competitionId, $firstName, $lastName, $phone, $email, $club, $accomodation, $otherInfo, $entryfee, $glider, $register, $competitonSign, $wingspan, $winglets, $engine, $flarmId,$competitionClass, $logger1, $logger2, $entryTime);
       return $entryInfo;*/
   }
+
+  public function selectCompetitionPilots($competitionId){
+
+    //FETCH COMPETITION PILOTS
+    try {
+      $sql    = ("SELECT * FROM view_competition_pilots WHERE competition_id = '$competitionId'");
+      $stmt   = $this->connect()->query($sql);
+      $pilots = $stmt->fetchAll();
+    } catch (PDOException $e) {
+      file_put_contents('error_fetching_competition_pilots.txt', date('d.m.Y G:i') . 'Fetching competition:' . $e->getMessage() . "\n", FILE_APPEND);
+    }
+    return $pilots;
+  }
 }

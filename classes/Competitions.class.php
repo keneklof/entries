@@ -36,15 +36,16 @@ class Competitions extends Database
     }
   }
 
-  public function selectCompetitionClasses($compId)
-  {
 
+  public function selectCompetitionClasses($competitionId)
+  {
+  //FETCH COMPETITION CLASSES
     try {
-      $sql    = ("SELECT class_id, comp_id, class_name_fin, class_name_eng FROM view_competition_classes WHERE comp_id = $compId");
+      $sql    = ("SELECT class_id, competition_id, class_name_fin, class_name_eng FROM view_competition_classes WHERE competition_id = $competitionId");
       $stmt   = $this->connect()->query($sql);
       $classes = $stmt->fetchAll();
     } catch (PDOException $e) {
-      file_put_contents('error_fetching_competiton_classes.txt', date('d.m.Y G:i') . 'Fetching competition classes:' . $e->getMessage() . "\n", FILE_APPEND);
+      file_put_contents('error_fetching_competiton_classes.txt', date('d.m.Y G:i') . ' Fetching competition classes:' . $e->getMessage() . "\n", FILE_APPEND);
     }
     return $classes;
   }
