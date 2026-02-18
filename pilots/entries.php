@@ -23,10 +23,16 @@ $l = $c->selectCompetitionLanguage($competitionId);
 <body class="bg-dark">
   <div class="container bg-light pb-3 pt-2 mt-2">
     <header class="m-0 p-0">
-      <div style="background-image: url('../images/header-image.jpg')" id="header">
-      </div>
+      <div style="background-image: url('../images/header-image.jpg')" id="header"></div>
     </header>
-    <h3 class="text-start"><?php echo $language[$l]['entries-header']; ?></h3>
+    <h3 class="text-start py-3"><?php echo $language[$l]['entries-header']; ?></h3>
+    <div class="container">
+      <div class="table-responsive">
+        <table class="table table-striped">
+
+        </table>
+      </div>
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
