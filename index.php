@@ -23,11 +23,11 @@ date_default_timezone_set("Europe/Helsinki");
 $cs = new DateTime($competitionInfo[0]["competition_start"]);
 $ce = new DateTime($competitionInfo[0]["competition_end"]);
 $competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
-$host = $competitionInfo[0]["competition_web_host"];
 
 //LINKS
 $confirmationUrl = $host . dirname($_SERVER["REQUEST_URI"]) . "/confirmation.php";
 $entriesUrl = $host . $_SERVER["REQUEST_URI"] . "pilots/entries.php";
+$host = $competitionInfo[0]["competition_web_host"];
 
 //HEADER INFO
 $competitionTitle = $competitionInfo[0]["competition_name"];
@@ -315,6 +315,14 @@ if (isset($_POST["submit"])) {
               <input class="form-control" type="text" name="pilot-club" id="pilot-club" value="<?php if (isset($club)) {
                                                                                                   echo $club;
                                                                                                 } ?>">
+            </div>
+          </div>
+          <div class="row">
+            <label for="pilot-country"><?php echo $language[$l]["label-pilot-country"]; ?></label>
+            <div class="col-12 col-md-2">
+             <select class="form-control" name="pilot-country" id="pilot-country">
+              <option value="0"><?php echo $language[$l]["select-option-country"]; ?></option>
+             </select>
             </div>
           </div>
         </fieldset>

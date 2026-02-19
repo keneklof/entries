@@ -3,14 +3,14 @@
 class Pilots extends Database
 {
 
-  public function newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId,$entryTime)
+  public function newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime)
   {
 
     //INSERTING INTO DATABASE
     try {
-      $sql = "INSERT INTO pilots VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+      $sql = "INSERT INTO pilots VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       $stmt = $this->connect()->prepare($sql);
-      $stmt->execute([null, $competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, 0, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime]);
+      $stmt->execute([null, $competitionId, $firstName, $lastName, $phone, $email, $club, 1, $competitionClass, $accomodation, $otherInfo, 0, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime]);
       return 1;
     } catch (PDOException $e) {
       file_put_contents('error_new_entry.txt', date('d.m.Y G:i') . 'Pilotin lisääminen:' . $e->getMessage() . "\n", FILE_APPEND);
@@ -21,7 +21,8 @@ class Pilots extends Database
       return $entryInfo;*/
   }
 
-  public function selectCompetitionPilots($competitionId){
+  public function selectCompetitionPilots($competitionId)
+  {
 
     //FETCH COMPETITION PILOTS
     try {
