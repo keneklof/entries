@@ -7,6 +7,7 @@ SELECT
   P.pilot_phone,
   P.pilot_email,
   P.pilot_club,
+  P.pilot_country,
   P.plane_class,
   P.pilot_accomodation,
   P.pilot_other_info,

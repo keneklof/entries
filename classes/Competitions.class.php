@@ -49,4 +49,16 @@ class Competitions extends Database
     }
     return $classes;
   }
+
+  public function selecPilotsCountries($competitionId){
+    //FETCH COMPETITION CLASSES
+    try {
+      $sql    = ("SELECT * FROM  view_competition_countries WHERE competition_id = $competitionId");
+      $stmt   = $this->connect()->query($sql);
+      $countries = $stmt->fetchAll();
+    } catch (PDOException $e) {
+      file_put_contents('error_fetching_competiton_countries.txt', date('d.m.Y G:i') . ' Fetching competition classes:' . $e->getMessage() . "\n", FILE_APPEND);
+    }
+    return $countries;
+  }
 }

@@ -65,14 +65,14 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
           echo "<h5>" . $class["class_name_fin"] . "</h5>";
           $counter = 0;
           echo "<div class='table-responsive mb-3'>";
-          echo "<table class='table table-striped table-bordered'>";
+          echo "<table class='table table-sm table-striped table-bordered'>";
           echo "<thead class='fw-bold'>";
           echo "<tr>";
           echo "<td>#</td>";
           echo "<td>Pilotti</td>";
           echo "<td>Kone</td>";
           echo "<td>Tunnus</td>";
-          echo "<td>Kerho</td>";
+          echo "<td class='d-none d-md-table-cell'>Kerho</td>";
           echo "<td>Maa</td>";
           echo "</thead>";
           for ($i = 0; $i < count($pilots); $i++) {
@@ -84,8 +84,8 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
               echo "<td>" . $pilots[$i]["pilot_last_name"] . " " . $pilots[$i]["pilot_first_name"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_type"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_competition_sign"] . "</td>";
-              echo "<td>" . $pilots[$i]["pilot_club"] . "</td>";
-              echo "<td><img class='flag' src='../images/flags/1.png'></td>";
+              echo "<td class='d-none d-md-table-cell'>" . $pilots[$i]["pilot_club"] . "</td>";
+              echo "<td><img class='flag' src='../images/flags/".$pilots[$i]["pilot_country"].".png'></td>";
               echo "</tr>";
             }
           }
@@ -97,14 +97,14 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
           echo "<h5>" . $class["class_name_eng"] . "</h5>";
           $counter = 0;
           echo "<div class='table-responsive mb-3'>";
-          echo "<table class='table table-striped'>";
+          echo "<table class='table table-sm table-striped'>";
           echo "<thead class='table-secondary fw-bold table-bordered'>";
           echo "<tr>";
           echo "<td>#</td>";
           echo "<td>Pilot</td>";
           echo "<td>Plane</td>";
           echo "<td>Sign</td>";
-          echo "<td>Club</td>";
+          echo "<td class='d-none d-md-table-cell'>Club</td>";
           echo "<td>Country</td>";
           echo "</thead>";
           for ($i = 0; $i < count($pilots); $i++) {
@@ -116,7 +116,7 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
               echo "<td>" . $pilots[$i]["pilot_last_name"] . " " . $pilots[$i]["pilot_first_name"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_type"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_competition_sign"] . "</td>";
-              echo "<td>" . $pilots[$i]["pilot_club"] . "</td>";
+              echo "<td class='d-none d-md-table-cell'>" . $pilots[$i]["pilot_club"] . "</td>";
               echo "<td><img class='flag' src='../images/flags/1.png'></td>";
               echo "</tr>";
             }

@@ -13,6 +13,9 @@ $competitionInfo = $c->selectCompetitionInfo($competitionId);
 //SELECT COMPETITION LANGUAGE
 $l = $c->selectCompetitionLanguage($competitionId);
 
+//SELECT PILOTS COUNTRIES
+$pilotsCountries = $c->selecPilotsCountries($competitionId);
+
 //SELECT COMPETITION CLASSES
 $competitionClasses = $c->selectCompetitionClasses($competitionId);
 
@@ -83,11 +86,17 @@ if (isset($_POST["submit"])) {
   }
 
   //Pilot club
-  //Plane Flarm ID
   if (isset($_POST["pilot-club"]) && $_POST["pilot-club"] != "") {
     $club = checkInput($_POST["pilot-club"]);
   } else {
     $club = "Ei kerhoa";
+  }
+
+  //Pilot country
+  if (isset($_POST["pilot-country"]) && $_POST["pilot-country"] != 0) {
+    $country = checkInput($_POST["pilot-country"]);
+  } else {
+    array_push($errorArray, $language[$l]["error-form-country"]);
   }
 
   //Plane type
@@ -210,7 +219,7 @@ if (isset($_POST["submit"])) {
     $et = new DateTime();
     $entryTime = $et->format("Y-m-d H:i:s");
     $np = new Pilots();
-    $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime);
+    $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $country, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime);
 
     if ($newPilot == 1) {
       header("location:" . $confirmationUrl);
@@ -320,9 +329,30 @@ if (isset($_POST["submit"])) {
           <div class="row">
             <label for="pilot-country"><?php echo $language[$l]["label-pilot-country"]; ?></label>
             <div class="col-12 col-md-2">
-             <select class="form-control" name="pilot-country" id="pilot-country">
-              <option value="0"><?php echo $language[$l]["select-option-country"]; ?></option>
-             </select>
+              <select class="form-control" name="pilot-country" id="pilot-country">
+                <option value="0" disabled selected><?php echo $language[$l]["select-option-country"]; ?></option>
+                <?php
+                if ($l == 0) {
+                  foreach ($pilotsCountries as $country) {
+
+                    if ($country["country_id"] == $country) {
+                      echo "<option value=" . $country['country_id'] . " selected>" . $country["country_name_fin"] . "</option>";
+                    } else {
+                      echo "<option value=" . $country['country_id'] . ">" . $country["country_name_fin"] . "</option>";
+                    }
+                  }
+                } else if ($l == 1) {
+                  foreach ($pilotsCountries as $country) {
+
+                    if ($country["country_id"] == $country) {
+                      echo "<option value=" . $country['country_id'] . " selected>" . $country["country_name_eng"] . "</option>";
+                    } else {
+                      echo "<option value=" . $country['country_id'] . ">" . $country["country_name_eng"] . "</option>";
+                    }
+                  }
+                }
+                ?>
+              </select>
             </div>
           </div>
         </fieldset>
