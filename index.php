@@ -1,68 +1,11 @@
 <?php
-include "autoloader.php";
 include "language.php";
 include "functions.php";
-
-//COMPETITION ID
-$competitionId = 1;
-$c = new Competitions();
-
-//SELECT ALL COMPETITION INFO
-$competitionInfo = $c->selectCompetitionInfo($competitionId);
-
-//SELECT COMPETITION LANGUAGE
-$l = $c->selectCompetitionLanguage($competitionId);
-
-//SELECT PILOTS COUNTRIES
-$pilotsCountries = $c->selecPilotsCountries($competitionId);
-
-//SELECT COMPETITION CLASSES
-$competitionClasses = $c->selectCompetitionClasses($competitionId);
-
-//LOCAL TIMEZONE
-date_default_timezone_set("Europe/Helsinki");
-
-//CREATING COMPETITION DATES
-$cs = new DateTime($competitionInfo[0]["competition_start"]);
-$ce = new DateTime($competitionInfo[0]["competition_end"]);
-$competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
-
-//LINKS
-$confirmationUrl = $host . dirname($_SERVER["REQUEST_URI"]) . "/confirmation.php";
-$entriesUrl = $host . $_SERVER["REQUEST_URI"] . "pilots/entries.php";
-$host = $competitionInfo[0]["competition_web_host"];
-
-//HEADER INFO
-$competitionTitle = $competitionInfo[0]["competition_name"];
-$competitionLocation = $competitionInfo[0]["competition_location"];
-
-//CREATING COMPETITION DATES
-$cs = new DateTime($competitionInfo[0]["competition_start"]);
-$ce = new DateTime($competitionInfo[0]["competition_end"]);
-$competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
-
-//ERROR ARRAY FOR FORM INPUTS
-$errorArray = [];
-
-//HEADER STYLING
-//Background image size 1000x300
-$headerImage = "background-image: url('images/header-image.jpg')";
-$competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
-$competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
-$competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:30%;";
-
-//COMPETITION LINKS
-if ($l == 0) {
-  $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
-  $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl . "' target='_blank'>Ilmoittautuneet</a>";
-} else if ($l == 1) {
-  $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
-  $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
-  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl . "' target='_blank'>Entries</a>";
-}
+include "variables.php";
 
 //HANDLING ENTRY FORM INPUTS
+//Error array for form inputs
+$errorArray = [];
 if (isset($_POST["submit"])) {
 
   //Pilot first name
@@ -93,10 +36,14 @@ if (isset($_POST["submit"])) {
   }
 
   //Pilot country
-  if (isset($_POST["pilot-country"]) && $_POST["pilot-country"] != 0) {
-    $country = checkInput($_POST["pilot-country"]);
-  } else {
-    array_push($errorArray, $language[$l]["error-form-country"]);
+  if ($competitionInfo[0]["competition_international"] == 1) {
+    if (isset($_POST["pilot-country"]) && $_POST["pilot-country"] != 0) {
+      $country = checkInput($_POST["pilot-country"]);
+    } else {
+      array_push($errorArray, $language[$l]["error-form-country"]);
+    }
+  } else if ($competitionInfo[0]["competition_international"] == 0) {
+    $country = 1;
   }
 
   //Plane type
@@ -265,26 +212,35 @@ if (isset($_POST["submit"])) {
         <h3 style="<?php echo $competitionLocationTextStyle; ?>"><?php echo $competitionLocation; ?></h3>
       </div>
     </header>
-    <div class="competition-info alert alert-secondary p-2 p-md-4 mt-3 text-dark">
-      <?php if ($l == 0) {
-        echo "<h5 class='mt-3'>KILPAILUINFO</h5>" . nl2br($competitionInfo[0]["competition_info_fin"]) .
-          "<h5 class='mt-3 mb-3'>LINKKEJÄ</h5>
+    <?php if ($l == 0 && $competitionInfo[0]["competition_info_visible"] == 1) {
+      echo "<div class='competition-info alert alert-secondary p-2 p-md-4 mt-3 text-dark'>";
+      echo "<h5 class='mt-3'>KILPAILUINFO</h5>" . nl2br($competitionInfo[0]["competition_info_fin"]);
+      echo "</div>";
+    } else if ($l == 1 && $competitionInfo[0]["competition_info_visible"] == 1) {
+      echo "<div class='competition-info alert alert-secondary p-2 p-md-4 mt-3 text-dark'>";
+      echo "<h5 class='mt-3'>COMPETITION INFO</h5>" . nl2br($competitionInfo[0]["competition_info_eng"]);
+      echo "</div>";
+    }
+    //END OF COMPETITION INFO
+    if ($l == 0) {
+      echo "<div class='competition-links alert alert-secondary p-2 p-md-4 mt-3 text-dark'>
+        <h5 class='mt-3 mb-3'>LINKKEJÄ</h5>
         <div class='row justify-content-center justify-content-md-start'>
         <div class='col-8 col-md-3'>" . $linkWebSite . "</div>
         <div class='col-8 col-md-3'>" . $linkEntries . "</div>
         <div class='col-8 col-md-3'>" . $linkSoaringSpot . "</div>
+        </div>
         </div>";
-      } else if ($l == 1) {
-        echo "<h5 class='mt-3'>COMPETITION INFO</h5>" . nl2br($competitionInfo[0]["competition_info_eng"]) .
-          "<h5 class='mt-3'>LINKS</h5>
+    } else if ($l == 1)
+      echo "<div class='competition-links alert alert-secondary p-2 p-md-4 mt-3 text-dark'>
+        <h5 class='mt-3'>LINKS</h5>
         <div class='row justify-content-center justify-content-md-start'>
         <div class='col-8 col-md-3'>" . $linkWebSite . "</div>
         <div class='col-8 col-md-3'>" . $linkEntries . "</div>
         <div class='col-8 col-md-3'>" . $linkSoaringSpot . "</div>
+        </div>
         </div>";
-      }
-      ?>
-    </div>
+    ?>
     <div class="enrollment-form border p-4 p-md-3">
       <?php if (isset($warnings)) {
         echo $warnings;
@@ -326,35 +282,39 @@ if (isset($_POST["submit"])) {
                                                                                                 } ?>">
             </div>
           </div>
-          <div class="row">
-            <label for="pilot-country"><?php echo $language[$l]["label-pilot-country"]; ?></label>
-            <div class="col-12 col-md-2">
-              <select class="form-control" name="pilot-country" id="pilot-country">
-                <option value="0" disabled selected><?php echo $language[$l]["select-option-country"]; ?></option>
-                <?php
-                if ($l == 0) {
-                  foreach ($pilotsCountries as $country) {
+          <!--===== COMPETITION INTERNATIONAL =====-->
+          <?php if ($competitionInfo[0]["competition_international"] == 1) { ?>
+            <div class="row">
+              <label for="pilot-country"><?php echo $language[$l]["label-pilot-country"] . "<span class='text-danger'> *</span>"; ?></label>
+              <div class="col-12 col-md-2">
+                <select class="form-control" name="pilot-country" id="pilot-country">
+                  <option value="0" selected><?php echo $language[$l]["select-option-country"]; ?></option>
+                  <?php
+                  if ($l == 0) {
+                    foreach ($pilotsCountries as $country) {
 
-                    if ($country["country_id"] == $country) {
-                      echo "<option value=" . $country['country_id'] . " selected>" . $country["country_name_fin"] . "</option>";
-                    } else {
-                      echo "<option value=" . $country['country_id'] . ">" . $country["country_name_fin"] . "</option>";
+                      if ($country["country_id"] == $country) {
+                        echo "<option value='" . $country['country_id'] . "' selected>" . $country["country_name_fin"] . "</option>";
+                      } else if ($country["country_id"] != $country) {
+                        echo "<option value=" . $country['country_id'] . ">" . $country["country_name_fin"] . "</option>";
+                      }
+                    }
+                  } else if ($l == 1) {
+                    foreach ($pilotsCountries as $country) {
+
+                      if ($country["country_id"] == $country) {
+                        echo "<option value='" . $country['country_id'] . "' selected>" . $country["country_name_eng"] . "</option>";
+                      } else if ($country["country_id"] != $country) {
+                        echo "<option value=" . $country['country_id'] . ">" . $country["country_name_eng"] . "</option>";
+                      }
                     }
                   }
-                } else if ($l == 1) {
-                  foreach ($pilotsCountries as $country) {
-
-                    if ($country["country_id"] == $country) {
-                      echo "<option value=" . $country['country_id'] . " selected>" . $country["country_name_eng"] . "</option>";
-                    } else {
-                      echo "<option value=" . $country['country_id'] . ">" . $country["country_name_eng"] . "</option>";
-                    }
-                  }
-                }
-                ?>
-              </select>
+                  ?>
+                </select>
+              </div>
             </div>
-          </div>
+          <?php } ?>
+
         </fieldset>
         <hr>
         <!--===== PLANE INFO =====-->
@@ -464,7 +424,14 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-4">
               <div class="alert alert-secondary w-100">
-                <small>IGC-tiedostot on toimitettava kilpailun järjestäjälle viimeistään ensimmäistä kilpailupäivää edeltävänä päivänä. Jouduttaaksesi kilpailun järjestelyjä pyri lähettämään tiedostot mahdollisimman nopeasti, mieluiten ilmoittautumisen yhteydessä.</small>
+                <small>
+                <?php if($competitionInfo[0]["competition_language"] == 'FIN') {
+                echo $language[$l]["igc-info"];
+                } else if ($competitionInfo[0]["competition_language"] == 'ENG'){
+                echo $language[$l]["igc-info"];
+                } ?>
+                </small>
+
               </div>
             </div>
           </div>
@@ -527,23 +494,21 @@ if (isset($_POST["submit"])) {
       </form>
     </div>
     <div class="footer py-4">
-      <h5 class="text-center">YHTEYSTIEDOT</h5>
-      <h6 class="text-center"><?php echo $competitionInfo[0]["competition_organiser"]; ?></h6>
-      <div class="row justify-content-center p-4 p-md-0">
-        <div class=" col-6 col-md-2">
-          <?php echo $competitionInfo[0]["competition_organiser_phone"] . " "; ?>
+      <h5 class="text-center"><?php echo $language[$l]["footer-header"]; ?></h5>
+      <div class="row p-4 p-md-0">
+        <div class="col-6 col-md-3 offset-md-4">
+          <h6><?php echo $competitionInfo[0]["competition_organiser"] . "<br>"; ?></h6>
+          <?php echo $competitionInfo[0]["competition_organiser_contact_name"] . "<br>";
+          echo $competitionInfo[0]["competition_organiser_phone"] . "<br>";
+          echo $competitionInfo[0]["competition_organiser_email"];
+          ?>
         </div>
-        <div class="col-6 col-md-2">
-          <?php echo $competitionInfo[0]["competition_organiser_email"]; ?>
-        </div>
-      </div>
-      <h6 class="text-center">Kilpailunjohtaja</h6>
-      <div class="row justify-content-center p-4 p-md-0">
-        <div class="col-6 col-md-2">
-          <?php echo $competitionInfo[0]["competition_director_phone"] . " "; ?>
-        </div>
-        <div class="col-6 col-md-2">
-          <?php echo $competitionInfo[0]["competition_director_email"]; ?>
+        <div class="col-6 col-md-3">
+          <h6><?php echo $language[$l]["footer-competition-director"]; ?></h6>
+          <?php echo $competitionInfo[0]["competition_director"] . "<br>";
+          echo $competitionInfo[0]["competition_director_phone"] . "<br>";
+          echo $competitionInfo[0]["competition_director_email"];
+          ?>
         </div>
       </div>
     </div>

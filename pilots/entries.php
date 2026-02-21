@@ -1,39 +1,11 @@
 <?php
-include "../autoloader.php";
 include "../functions.php";
 include "../language.php";
-
-$competitionId = 1;
-$c = new Competitions();
-//SELECT COMPETITON LANGUAGE
-$l = $c->selectCompetitionLanguage($competitionId);
-
-//SELECT ALL COMPETITION INFO
-$competitionInfo = $c->selectCompetitionInfo($competitionId);
+include "../variables.php";
 
 $cp = new Pilots();
-//SELECT COMPETITON PILOTS
+//SELECT COMPETITON PILOTS (ONLY NEEDDE IN THIS SCRIPT)
 $pilots = $cp->selectCompetitionPilots($competitionId);
-
-//SELECT COMPETITON CLASSES
-$classes = $c->selectCompetitionClasses($competitionId);
-
-//CREATING COMPETITION DATES
-$cs = new DateTime($competitionInfo[0]["competition_start"]);
-$ce = new DateTime($competitionInfo[0]["competition_end"]);
-$competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
-
-//HEADER INFO
-$competitionTitle = $competitionInfo[0]["competition_name"];
-$competitionLocation = $competitionInfo[0]["competition_location"];
-
-//HEADER STYLING
-//Background image size 1000x300
-$headerImage = "background-image: url('../images/header-image.jpg')";
-$competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
-$competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
-$competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:30%;";
-
 
 ?>
 <!DOCTYPE html>
@@ -51,7 +23,7 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
 <body class="bg-dark">
   <div class="container bg-light pb-3 pt-2 mt-2">
     <header class="m-0 p-0">
-      <div style="<?php echo $headerImage; ?>" id="header">
+      <div style="<?php echo $entriesHeaderImage; ?>" id="header">
         <h3 style="<?php echo $competitionNameTextStyle; ?>"><?php echo $competitionTitle; ?></h3>
         <h3 style="<?php echo $competitionDateTextStyle; ?>"><?php echo $competitionDates; ?></h3>
         <h3 style="<?php echo $competitionLocationTextStyle; ?>"><?php echo $competitionLocation; ?></h3>
@@ -61,7 +33,7 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
       <h3 class="py-3 ml-3"><?php echo $language[$l]['entries-header']; ?></h3>
       <?php
       if ($l == 0) {
-        foreach ($classes as $class) {
+        foreach ($competitionClasses as $class) {
           echo "<h5>" . $class["class_name_fin"] . "</h5>";
           $counter = 0;
           echo "<div class='table-responsive mb-3'>";
@@ -73,7 +45,9 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
           echo "<td>Kone</td>";
           echo "<td>Tunnus</td>";
           echo "<td class='d-none d-md-table-cell'>Kerho</td>";
-          echo "<td>Maa</td>";
+          if (isset($competitionInfo[0]["competition_international"]) && $competitionInfo[0]["competition_international"] == 1) {
+            echo "<td>Maa</td>";
+          }
           echo "</thead>";
           for ($i = 0; $i < count($pilots); $i++) {
             if ($pilots[$i]["plane_class"] == $class["class_id"]) {
@@ -85,7 +59,9 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
               echo "<td>" . $pilots[$i]["plane_type"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_competition_sign"] . "</td>";
               echo "<td class='d-none d-md-table-cell'>" . $pilots[$i]["pilot_club"] . "</td>";
-              echo "<td><img class='flag' src='../images/flags/".$pilots[$i]["pilot_country"].".png'></td>";
+              if (isset($competitionInfo[0]["competition_international"]) && $competitionInfo[0]["competition_international"] == 1) {
+                echo "<td><img class='flag' src='../images/flags/" . $pilots[$i]["pilot_country"] . ".png'></td>";
+              }
               echo "</tr>";
             }
           }
@@ -93,7 +69,7 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
           echo "</div>";
         }
       } elseif ($l == 1) {
-        foreach ($classes as $class) {
+        foreach ($competitionClasses as $class) {
           echo "<h5>" . $class["class_name_eng"] . "</h5>";
           $counter = 0;
           echo "<div class='table-responsive mb-3'>";
@@ -117,7 +93,7 @@ $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; p
               echo "<td>" . $pilots[$i]["plane_type"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_competition_sign"] . "</td>";
               echo "<td class='d-none d-md-table-cell'>" . $pilots[$i]["pilot_club"] . "</td>";
-              echo "<td><img class='flag' src='../images/flags/1.png'></td>";
+              echo "<td><img class='flag' src='../images/flags/" . $pilots[$i]["pilot_country"] . ".png'></td>";
               echo "</tr>";
             }
           }

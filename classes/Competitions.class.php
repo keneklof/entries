@@ -2,15 +2,15 @@
 
 class Competitions extends Database
 {
-  public $compId;
+  public $competitionId;
 
-  public function selectCompetitionInfo($compId)
+  public function selectCompetitionInfo($competitionId)
   {
-    $this->compId = $compId;
+    $this->competitionId = $competitionId;
 
     //FETCH COMPETITION INFO
     try {
-      $sql    = ("SELECT * FROM competitions WHERE competition_id = '$compId'");
+      $sql    = ("SELECT * FROM competitions WHERE competition_id = '$competitionId'");
       $stmt   = $this->connect()->query($sql);
       $competitions = $stmt->fetchAll();
     } catch (PDOException $e) {
@@ -19,27 +19,9 @@ class Competitions extends Database
     return $competitions;
   }
 
-  public function selectCompetitionLanguage($compId)
-  {
-    //FETCH COMPETITION LANGUAGE
-    try {
-      $sql    = ("SELECT competition_language FROM competitions WHERE competition_id = '$compId'");
-      $stmt   = $this->connect()->query($sql);
-      $l = $stmt->fetchAll();
-    } catch (PDOException $e) {
-      file_put_contents('error_fetching_language.txt', date('d.m.Y G:i') . 'Fetching competition:' . $e->getMessage() . "\n", FILE_APPEND);
-    }
-    if ($l[0]["competition_language"] == "FIN") {
-      return 0;
-    } else if ($l[0]["competition_language"] == "ENG") {
-      return 1;
-    }
-  }
-
-
   public function selectCompetitionClasses($competitionId)
   {
-  //FETCH COMPETITION CLASSES
+    //FETCH COMPETITION CLASSES
     try {
       $sql    = ("SELECT class_id, competition_id, class_name_fin, class_name_eng FROM view_competition_classes WHERE competition_id = $competitionId");
       $stmt   = $this->connect()->query($sql);
@@ -50,15 +32,42 @@ class Competitions extends Database
     return $classes;
   }
 
-  public function selecPilotsCountries($competitionId){
-    //FETCH COMPETITION CLASSES
+  private function checkLanguage($competitionId)
+  {
+    //FETCH COMPETITION LANGUAGE
     try {
-      $sql    = ("SELECT * FROM  view_competition_countries WHERE competition_id = $competitionId");
+      $sql    = ("SELECT competition_language FROM  competitions WHERE competition_id = $competitionId");
       $stmt   = $this->connect()->query($sql);
-      $countries = $stmt->fetchAll();
+      $language = $stmt->fetchColumn();
     } catch (PDOException $e) {
-      file_put_contents('error_fetching_competiton_countries.txt', date('d.m.Y G:i') . ' Fetching competition classes:' . $e->getMessage() . "\n", FILE_APPEND);
+      file_put_contents('error_fetching_competiton_language_private.txt', date('d.m.Y G:i') . ' Fetching competition language:' . $e->getMessage() . "\n", FILE_APPEND);
     }
-    return $countries;
+    return $language;
+  }
+
+  public function selecPilotsCountries($competitionId)
+  {
+    $language = $this->checkLanguage($competitionId);
+
+    //FETCH COMPETITION PILOTS COUNTRIES
+    if ($language == "FIN") {
+      try {
+        $sql    = ("SELECT * FROM  view_competition_countries WHERE competition_id = $competitionId ORDER BY country_name_fin");
+        $stmt   = $this->connect()->query($sql);
+        $countries = $stmt->fetchAll();
+      } catch (PDOException $e) {
+        file_put_contents('error_fetching_competiton_countries.txt', date('d.m.Y G:i') . ' Fetching competition countries:' . $e->getMessage() . "\n", FILE_APPEND);
+      }
+      return $countries;
+    } else if ($language == "ENG") {
+      try {
+        $sql    = ("SELECT * FROM  view_competition_countries WHERE competition_id = $competitionId ORDER BY country_name_eng");
+        $stmt   = $this->connect()->query($sql);
+        $countries = $stmt->fetchAll();
+      } catch (PDOException $e) {
+        file_put_contents('error_fetching_competiton_countries.txt', date('d.m.Y G:i') . ' Fetching competition countries:' . $e->getMessage() . "\n", FILE_APPEND);
+      } 
+      return $countries;
+    }
   }
 }
