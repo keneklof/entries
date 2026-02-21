@@ -57,6 +57,9 @@ $language = array(
     "footer-header" => "Yhteystiedot",
     "footer-competition-director" => "Kilpailunjohtaja",
     "confirmation-header" => "Ilmoittautuminen vastaanotettu",
+    "confirmation-header-2" => "Tervetuloa kisoihin!",
+    "confirmation-text" => "Olet saanut antamaasi sähköpostiosoitteeseen vahvistuksen ilmoittautumisesta. Sähköpostissa on linkki osallistujalistaan sekä linkki, jonka kautta voit päivittää kilpaulutietosi. Tarkistahan, että antamasi tiedot ovat oikein.",
+    "confirmation-entry-time" => "Ilmoittautuminen vastaanotettu: ",
     "igc-info" => "IGC-tiedostot on toimitettava kilpailun järjestäjälle viimeistään ensimmäistä kilpailupäivää edeltävänä päivänä. Jouduttaaksesi kilpailun järjestelyjä pyri lähettämään tiedostot mahdollisimman nopeasti, mieluiten ilmoittautumisen yhteydessä.",
   ),
   array(
@@ -116,6 +119,9 @@ $language = array(
     "footer-header" => "Contact info",
     "footer-competition-director" => "Competition director",
     "confirmation-header" => "Competition entry received",
+    "confirmation-header-2" => "Welcome to the competition!",
+    "confirmation-text" => "You have received an email to the address you gave. The email contains a link to the participant list and a link to update your competition information. Please check that the information you gave is correct.",
+    "confirmation-entry-time" => "Competition entry received: ",
     "igc-info" => "IGC-test files must be delivered to the organisation not later than the day before the first competition day. To speed up the arrangements of the competition we strongly recommend that you upload the files when you enroll to the competition.",
   )
 );

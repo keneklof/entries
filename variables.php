@@ -4,6 +4,9 @@ include "autoloader.php";
  //LOCAL TIMEZONE
 date_default_timezone_set("Europe/Helsinki");
 
+//ACTUAL TIME
+$actualTime = new DateTime ("now");
+
 //COMPETITION ID
 $competitionId = 1;
 $c = new Competitions();
@@ -42,6 +45,7 @@ $competitionLocation = $competitionInfo[0]["competition_location"];
 //HEADER STYLING
 //Background image size 1000x300
 $headerImage = "background-image: url('images/header-image.jpg')";
+$confirmationHeaderImage = "images/competition-logo.jpg";
 $entriesHeaderImage = "background-image: url('../images/header-image.jpg')";
 $competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
 $competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";

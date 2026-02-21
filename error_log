@@ -1,1 +1,0 @@
-[21-Feb-2026 11:55:32 Europe/Helsinki] PHP Fatal error:  Cannot redeclare AutoLoad() (previously declared in /home2/xosiponx/public_html/entries/jannenkisat2026/autoloader.php:3) in /home2/xosiponx/public_html/entries/jannenkisat2026/autoloader.php on line 3
