@@ -1,7 +1,7 @@
 <?php
-include "../functions.php";
 include "../language.php";
 include "../variables.php";
+include "../functions.php";
 
 $cp = new Pilots();
 //SELECT COMPETITON PILOTS (ONLY NEEDDE IN THIS SCRIPT)

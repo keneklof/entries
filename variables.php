@@ -37,6 +37,7 @@ $competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
 $host = $competitionInfo[0]["competition_web_host"];
 $confirmationUrl = $host . dirname($_SERVER["REQUEST_URI"]) . "/confirmation.php";
 $entriesUrl = $host . $_SERVER["REQUEST_URI"] . "pilots/entries.php";
+$emailImage = $host . dirname($_SERVER["REQUEST_URI"]) . "/images/competition-logo.png";
 
 //HEADER INFO
 $competitionTitle = $competitionInfo[0]["competition_name"];
@@ -45,7 +46,7 @@ $competitionLocation = $competitionInfo[0]["competition_location"];
 //HEADER STYLING
 //Background image size 1000x300
 $headerImage = "background-image: url('images/header-image.jpg')";
-$confirmationHeaderImage = "images/competition-logo.jpg";
+$confirmationHeaderImage = "images/competition-logo.png";//ATTENTION! .PNG FILE EXTENSION
 $entriesHeaderImage = "background-image: url('../images/header-image.jpg')";
 $competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
 $competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";

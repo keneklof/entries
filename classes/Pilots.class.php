@@ -34,4 +34,18 @@ class Pilots extends Database
     }
     return $pilots;
   }
+
+  public function selectSinglePilotInfo($competitionId, $pilotLinkId)
+  {
+
+    //FETCH COMPETITION PILOTS
+    try {
+      $sql    = ("SELECT * FROM view_competition_pilots WHERE competition_id = '$competitionId' AND pilot_link_id = '$pilotLinkId'");
+      $stmt   = $this->connect()->query($sql);
+      $pilotInfo = $stmt->fetchAll();
+    } catch (PDOException $e) {
+      file_put_contents('error_fetching_single_pilot.txt', date('d.m.Y G:i') . 'Fetching single pilot info:' . $e->getMessage() . "\n", FILE_APPEND);
+    }
+    return $pilotInfo;
+  }
 }

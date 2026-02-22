@@ -1,7 +1,7 @@
 <?php
+include "variables.php";
 include "language.php";
 include "functions.php";
-include "variables.php";
 
 //HANDLING ENTRY FORM INPUTS
 //Error array for form inputs
@@ -180,6 +180,8 @@ if (isset($_POST["submit"])) {
     }
     $warnings .= "</div>";
   }
+
+  sendConfirmationMail($competitionId, $pilotLinkId, $emailImage);
 } //End of submit
 
 ?>
