@@ -3,7 +3,7 @@ include "variables.php";
 include "language.php";
 include "functions.php";
 
-//HANDLING ENTRY FORM INPUTS
+//HANDLING UPDATE FORM INPUTS
 //Error array for form inputs
 $errorArray = [];
 if (isset($_POST["submit"])) {
@@ -187,7 +187,6 @@ if (isset($_POST["submit"])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
