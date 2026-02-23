@@ -8,9 +8,9 @@ class Pilots extends Database
 
     //INSERTING INTO DATABASE
     try {
-      $sql = "INSERT INTO pilots VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+      $sql = "INSERT INTO pilots VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
       $stmt = $this->connect()->prepare($sql);
-      $stmt->execute([null, $competitionId, $firstName, $lastName, $phone, $email, $club, $country, $competitionClass, $accomodation, $otherInfo, 0, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime]);
+      $stmt->execute([null, $competitionId, $firstName, $lastName, $phone, $email, $club, $country, $competitionClass, $accomodation, $otherInfo, 0, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime, $entryTime]);
       return 1;
     } catch (PDOException $e) {
       file_put_contents('error_new_entry.txt', date('d.m.Y G:i') . 'Pilotin lisääminen:' . $e->getMessage() . "\n", FILE_APPEND);
@@ -19,6 +19,19 @@ class Pilots extends Database
     /*$entryInfo = array();
       array_push($entryInfo, $competitionId, $firstName, $lastName, $phone, $email, $club, $accomodation, $otherInfo, $entryfee, $glider, $register, $competitonSign, $wingspan, $winglets, $engine, $flarmId,$competitionClass, $logger1, $logger2, $entryTime);
       return $entryInfo;*/
+  }
+
+  public function updatePilot($competitionId, $pilotLinkId, $firstName, $lastName,$phone, $email, $club, $country, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $updateTime){
+    //INSERTING INTO DATABASE
+    try {
+      $sql = "UPDATE pilots SET pilot_first_name = ?, pilot_last_name = ?, pilot_phone = ?, pilot_email = ?, pilot_club = ?, pilot_country = ?, plane_class = ?, pilot_accomodation = ?, pilot_other_info = ?, plane_type = ?, plane_register = ?, plane_competition_sign = ?, plane_wingspan = ?, plane_winglets = ?, plane_engine = ?, plane_flarm_id = ?, update_time = ? WHERE competition_id = ? AND pilot_link_id = ?";
+      $stmt = $this->connect()->prepare($sql);
+      $stmt->execute([$firstName, $lastName, $phone, $email, $club, $country, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $updateTime, $competitionId, $pilotLinkId]);
+      return 1;
+    } catch (PDOException $e) {
+      file_put_contents('error_update_pilot.txt', date('d.m.Y G:i') . 'Pilotin tietojen päivitys:' . $e->getMessage() . "\n", FILE_APPEND);
+      return 0;
+    }
   }
 
   public function selectCompetitionPilots($competitionId)

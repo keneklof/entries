@@ -60,7 +60,7 @@ if (isset($_POST["submit"])) {
   if (isset($_POST["plane-competition-sign"])) {
     $competitionSign = strtoupper(checkInput($_POST["plane-competition-sign"]));
     //Creating an indidual string for the pilot
-    $pilotLinkId = strtolower($competitionSign) . uniqid("sm2026");
+    $pilotLinkId = strtolower($competitionSign) . uniqid($competitionInfo[0]["competition_uniq_id"]);
   }
 
   //Plane wingspan
@@ -116,7 +116,8 @@ if (isset($_POST["submit"])) {
     $target_file = basename($_FILES["flight-logger-1"]["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $fileSize = $_FILES["flight-logger-1"]["size"];
-
+    $logger1 = basename($_FILES["flight-logger-1"]["name"]);
+      
     $priority = 1;
 
     if ($fileType != 'igc') {
@@ -129,17 +130,17 @@ if (isset($_POST["submit"])) {
 
     if (empty($errorArray)) {
       move_uploaded_file($_FILES['flight-logger-1']['tmp_name'], $target_dir . $competitionSign . "-" . $priority . "-" . $target_file);
-      $logger1 = 1;
     }
   } else {
-    $logger1 = 0;
-  }
+    $logger1 = "";  
+    }
 
   if ($_FILES["flight-logger-2"]["error"] != 4 || $_FILES['flight-logger-2']['size'] != 0) {
     $target_dir = "igcfiles/";
     $target_file = basename($_FILES["flight-logger-2"]["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $fileSize = $_FILES["flight-logger-2"]["size"];
+    $logger2 =  basename($_FILES["flight-logger-2"]["name"]);
 
     $priority = 2;
 
@@ -153,10 +154,9 @@ if (isset($_POST["submit"])) {
 
     if (empty($errorArray)) {
       move_uploaded_file($_FILES['flight-logger-2']['tmp_name'], $target_dir . $competitionSign . "-" . $priority . "-" . $target_file);
-      $logger2 = 1;
     }
   } else {
-    $logger2 = 0;
+    $logger2 = "---";
   }
   //******* UPLOAD OF IGC FILES END *********/
 
@@ -167,7 +167,7 @@ if (isset($_POST["submit"])) {
     $et = new DateTime();
     $entryTime = $et->format("Y-m-d H:i:s");
     $np = new Pilots();
-    $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $country, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime);
+    $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $country, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime, $entryTime);
 
     if ($newPilot == 1) {
       header("location:" . $confirmationUrl);
