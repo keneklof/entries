@@ -161,6 +161,7 @@ if (isset($_POST["submit"])) {
   //******* UPLOAD OF IGC FILES END *********/
 
   if (empty($errorArray)) {
+    $pilotLinkUpdate = $host . dirname($_SERVER["REQUEST_URI"]) . "/pilot_update.php?pilot_id=" . $pilotLinkId;
     //ENTRY SUCCESS
     $success = "";
     $et = new DateTime();
@@ -181,12 +182,13 @@ if (isset($_POST["submit"])) {
     $warnings .= "</div>";
   }
 
-  sendConfirmationMail($competitionId, $pilotLinkId, $emailImage);
+  sendConfirmationMail($competitionId, $pilotLinkId, $pilotLinkUpdate, $emailImage);
 } //End of submit
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -426,11 +428,11 @@ if (isset($_POST["submit"])) {
             <div class="col-12 col-md-4">
               <div class="alert alert-secondary w-100">
                 <small>
-                <?php if($competitionInfo[0]["competition_language"] == 'FIN') {
-                echo $language[$l]["igc-info"];
-                } else if ($competitionInfo[0]["competition_language"] == 'ENG'){
-                echo $language[$l]["igc-info"];
-                } ?>
+                  <?php if ($competitionInfo[0]["competition_language"] == 'FIN') {
+                    echo $language[$l]["igc-info"];
+                  } else if ($competitionInfo[0]["competition_language"] == 'ENG') {
+                    echo $language[$l]["igc-info"];
+                  } ?>
                 </small>
 
               </div>

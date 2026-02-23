@@ -26,22 +26,24 @@ function checkInput($data): string
   return $data;
 }
 
-function sendConfirmationMail($competitionId, $pilotLinkId, $emailImage)
+function sendConfirmationMail($competitionId, $pilotLinkId, $pilotLinkUpdate, $emailImage)
 {
 
   $pi = new Pilots();
 
-  $pilotInfo = $pi->selectSinglePilotInfo($competitionId, $pilotLinkId);
+  //FETCHING SINGLE PILOT INFORMATION FOR UPDATE
+  $pilotInfo = $pi->selectSinglePilotInfo($competitionId, $pilotLinkId, $emailImage);
 
   //SEND EMAIL TO PILOT
   //Create an instance; passing `true` enables exceptions
   $mailBodyFIN =
-  "<div><img src=" . $emailImage . " alt='Logo' style='width:250px'></div>
+    "<div style='margin-bottom = 5px;'><img src=" . $emailImage . " alt='Logo' style='width:250px'></div>
   <h3> Hei!" . $pilotInfo[0]['pilot_first_name'] . "</h3>
   <p>ILMOITTAUTUMISTIEDOT</p>
-  <p>" . $pilotInfo[0]['plane_logger_one']. "</p>
-  <p>" . $pilotInfo[0]['plane_logger_two'] . "</p>";
-  
+  <p>" . $pilotInfo[0]['plane_logger_one'] . "</p>
+  <p>" . $pilotInfo[0]['plane_logger_two'] . "</p>
+  <p>Päivitä tietosi täällä: <a href='" . $pilotLinkUpdate . "' target='_blank'> tästä</a></p>";
+
   $mail = new PHPMailer(true);
 
   try {
