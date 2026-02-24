@@ -13,7 +13,6 @@ $c = new Competitions();
 
 //SELECT ALL COMPETITION INFO
 $competitionInfo = $c->selectCompetitionInfo($competitionId);
-
 //SELECT COMPETITION LANGUAGE
 $competitionLanguage = $competitionInfo[0]["competition_language"];
 if ($competitionLanguage == "FIN") {
@@ -35,12 +34,13 @@ $competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
 
 //LINKS
 $host = $competitionInfo[0]["competition_web_host"];
-$confirmationUrl = $host . dirname($_SERVER["REQUEST_URI"]) . "/confirmation.php";
-$entriesUrl = $host . $_SERVER["REQUEST_URI"] . "pilots/entries.php";
-$emailImage = $host . dirname($_SERVER["REQUEST_URI"]) . "/images/competition-logo.png";
+$path = $competitionInfo[0]["competition_folder"];
+$confirmationUrl = $host . $path . "confirmation.php";
+$entriesUrl = $host . $path. "pilots/entries.php";
+$emailImage = $host . $path . "images/competition-logo.png";
 
 //HEADER INFO
-$competitionTitle = $competitionInfo[0]["competition_name"];
+$competitionName = $competitionInfo[0]["competition_name"];
 $competitionLocation = $competitionInfo[0]["competition_location"];
 
 //HEADER STYLING

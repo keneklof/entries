@@ -26,7 +26,7 @@ function checkInput($data): string
   return $data;
 }
 
-function sendConfirmationMail($competitionId, $pilotLinkId, $pilotLinkUpdate, $emailImage)
+function sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $pilotLinkUpdate, $entriesUrl ,$emailImage)
 {
 
   $pi = new Pilots();
@@ -37,12 +37,21 @@ function sendConfirmationMail($competitionId, $pilotLinkId, $pilotLinkUpdate, $e
   //SEND EMAIL TO PILOT
   //Create an instance; passing `true` enables exceptions
   $mailBodyFIN =
-    "<div style='margin-bottom = 5px;'><img src=" . $emailImage . " alt='Logo' style='width:250px'></div>
-  <h3> Hei!" . $pilotInfo[0]['pilot_first_name'] . "</h3>
+    "<div style='margin-bottom = 5px;font-size: 1.1em;'><img src=" . $emailImage . " alt='Logo' style='width:250px'></div>
+  <h3> Hei&nbsp;" . $pilotInfo[0]['pilot_first_name'] . "!</h3>
+  <p>".strtoupper($competitionName)."</p>
   <p>ILMOITTAUTUMISTIEDOT</p>
-  <p>" . $pilotInfo[0]['plane_logger_one'] . "</p>
-  <p>" . $pilotInfo[0]['plane_logger_two'] . "</p>
-  <p>Päivitä tietosi täällä: <a href='" . $pilotLinkUpdate . "' target='_blank'> tästä</a></p>";
+  <table>
+  <tr><td>Kone:</td><td>".$pilotInfo[0]['plane_type']."</td></tr>
+  <tr><td>Rekisteri:</td><td>".$pilotInfo[0]['plane_register']."</td></tr>
+  <tr><td>Kilpailutunnus:</td><td>".$pilotInfo[0]['plane_competition_sign']."</td></tr>
+  <tr><td>Luokka:</td><td>".$pilotInfo[0]['class_name_fin'] ."</td></tr>
+  <tr><td>Logger 1:</td><td>".$pilotInfo[0]['plane_logger_one'] ."</td></tr>
+  <tr><td>Logger 2:</td><td>".$pilotInfo[0]['plane_logger_two'] ."</td></tr>
+  <tr><td>FlarmID:</td><td>".$pilotInfo[0]['plane_flarm_id'] ."</td></tr>
+  </table>
+  <p>Voit tarkistaa ja päivittää tietosi:&nbsp;<a href='" . $pilotLinkUpdate . "' target='_blank'>täältä</a></p>
+  <p><a href='" . $entriesUrl . "' target='_blank'>Ilmoittautumislista</a></p>";
 
   $mail = new PHPMailer(true);
 

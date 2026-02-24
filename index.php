@@ -38,12 +38,12 @@ if (isset($_POST["submit"])) {
   //Pilot country
   if ($competitionInfo[0]["competition_international"] == 1) {
     if (isset($_POST["pilot-country"]) && $_POST["pilot-country"] != 0) {
-      $country = checkInput($_POST["pilot-country"]);
+      $pilotCountry = checkInput($_POST["pilot-country"]);
     } else {
       array_push($errorArray, $language[$l]["error-form-country"]);
     }
   } else if ($competitionInfo[0]["competition_international"] == 0) {
-    $country = 1;
+    $pilotCountry = 1;
   }
 
   //Plane type
@@ -117,7 +117,7 @@ if (isset($_POST["submit"])) {
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $fileSize = $_FILES["flight-logger-1"]["size"];
     $logger1 = basename($_FILES["flight-logger-1"]["name"]);
-      
+
     $priority = 1;
 
     if ($fileType != 'igc') {
@@ -132,8 +132,8 @@ if (isset($_POST["submit"])) {
       move_uploaded_file($_FILES['flight-logger-1']['tmp_name'], $target_dir . $competitionSign . "-" . $priority . "-" . $target_file);
     }
   } else {
-    $logger1 = "";  
-    }
+    $logger1 = "---";
+  }
 
   if ($_FILES["flight-logger-2"]["error"] != 4 || $_FILES['flight-logger-2']['size'] != 0) {
     $target_dir = "igcfiles/";
@@ -161,14 +161,14 @@ if (isset($_POST["submit"])) {
   //******* UPLOAD OF IGC FILES END *********/
 
   if (empty($errorArray)) {
-    $pilotLinkUpdate = $host . dirname($_SERVER["REQUEST_URI"]) . "/pilot_update.php?pilot_id=" . $pilotLinkId;
+    $pilotLinkUpdate = $host . $path . "pilot_update.php?pilot_id=" . $pilotLinkId;
     //ENTRY SUCCESS
     $success = "";
     $et = new DateTime();
     $entryTime = $et->format("Y-m-d H:i:s");
     $np = new Pilots();
-    $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $country, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime, $entryTime);
-
+    $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $pilotCountry, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime, $entryTime);
+    sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $pilotLinkUpdate, $entriesUrl, $emailImage);
     if ($newPilot == 1) {
       header("location:" . $confirmationUrl);
     } else if ($newPilot == 0) {
@@ -181,8 +181,6 @@ if (isset($_POST["submit"])) {
     }
     $warnings .= "</div>";
   }
-
-  sendConfirmationMail($competitionId, $pilotLinkId, $pilotLinkUpdate, $emailImage);
 } //End of submit
 
 ?>
@@ -192,7 +190,7 @@ if (isset($_POST["submit"])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><?php echo $competitionTitle; ?>
+  <title><?php echo $competitionName; ?>
   </title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css">
@@ -210,7 +208,7 @@ if (isset($_POST["submit"])) {
   <div class="container bg-light pb-3 pt-2 mt-2">
     <header class="m-0 p-0">
       <div style="<?php echo $headerImage; ?>" id="header">
-        <h3 style="<?php echo $competitionNameTextStyle; ?>"><?php echo $competitionTitle; ?></h3>
+        <h3 style="<?php echo $competitionNameTextStyle; ?>"><?php echo $competitionName; ?></h3>
         <h3 style="<?php echo $competitionDateTextStyle; ?>"><?php echo $competitionDates; ?></h3>
         <h3 style="<?php echo $competitionLocationTextStyle; ?>"><?php echo $competitionLocation; ?></h3>
       </div>
@@ -291,23 +289,23 @@ if (isset($_POST["submit"])) {
               <label for="pilot-country"><?php echo $language[$l]["label-pilot-country"] . "<span class='text-danger'> *</span>"; ?></label>
               <div class="col-12 col-md-2">
                 <select class="form-control" name="pilot-country" id="pilot-country">
-                  <option value="0" selected><?php echo $language[$l]["select-option-country"]; ?></option>
+                  <option value="0" selected disabled><?php echo $language[$l]["select-option-country"]; ?></option>
                   <?php
                   if ($l == 0) {
                     foreach ($pilotsCountries as $country) {
 
-                      if ($country["country_id"] == $country) {
+                      if ($country["country_id"] == $pilotCountry) {
                         echo "<option value='" . $country['country_id'] . "' selected>" . $country["country_name_fin"] . "</option>";
-                      } else if ($country["country_id"] != $country) {
+                      } else if ($country["country_id"] != $pilotCountry) {
                         echo "<option value=" . $country['country_id'] . ">" . $country["country_name_fin"] . "</option>";
                       }
                     }
                   } else if ($l == 1) {
                     foreach ($pilotsCountries as $country) {
 
-                      if ($country["country_id"] == $country) {
+                      if ($country["country_id"] == $pilotCountry) {
                         echo "<option value='" . $country['country_id'] . "' selected>" . $country["country_name_eng"] . "</option>";
-                      } else if ($country["country_id"] != $country) {
+                      } else if ($country["country_id"] != $pilotCountry) {
                         echo "<option value=" . $country['country_id'] . ">" . $country["country_name_eng"] . "</option>";
                       }
                     }
@@ -485,7 +483,11 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-9">
               <label for="other-info"><?php echo $language[$l]["label-other-info"]; ?></label>
-              <textarea class="w-100 form-control" name="other-info" id="other-info" rows="10" placeholder="<?php echo $language[$l]['placeholder-info']; ?>"></textarea>
+              <textarea class="w-100 form-control" name="other-info" id="other-info" rows="10" placeholder="<?php echo $language[$l]['placeholder-info']; ?>">
+                <?php if (isset($otherInfo)) {
+                  echo $otherInfo;
+                } ?>
+                  </textarea>
             </div>
           </div>
         </fieldset>
