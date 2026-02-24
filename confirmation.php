@@ -22,8 +22,8 @@ $entryTime = $actualTime->format("d.m.Y H:i:s");
       <div class=" d-flex justify-content-center py-4">
         <img src="<?php echo $confirmationHeaderImage; ?>" alt="Logo" class="img-fluid">
       </div>
-      <h4 class="text-center"><?php echo $language[$l]['confirmation-header']; ?></h4>
-      <h4 class="lead text-center"><?php echo $language[$l]['confirmation-header-2']; ?></h4>
+      <h4 class="text-center"><?php echo $language[$l]["confirmation-header"]; ?></h4>
+      <h4 class="lead text-center"><?php echo $competitionInfo[0]["competition_name"]; ?></h4>
        <div class="row">
         <div class="col-12 col-md-6 offset-md-3">
         <?php echo $language[$l]['confirmation-text']; ?>

@@ -26,7 +26,7 @@ function checkInput($data): string
   return $data;
 }
 
-function sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $pilotLinkUpdate, $entriesUrl ,$emailImage)
+function sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $pilotLinkUpdate, $entriesUrl, $emailImage, $firstName, $lastName)
 {
 
   $pi = new Pilots();
@@ -39,16 +39,17 @@ function sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $p
   $mailBodyFIN =
     "<div style='margin-bottom = 5px;font-size: 1.1em;'><img src=" . $emailImage . " alt='Logo' style='width:250px'></div>
   <h3> Hei&nbsp;" . $pilotInfo[0]['pilot_first_name'] . "!</h3>
-  <p>".strtoupper($competitionName)."</p>
+  <p>" . strtoupper($competitionName) . "</p>
   <p>ILMOITTAUTUMISTIEDOT</p>
   <table>
-  <tr><td>Kone:</td><td>".$pilotInfo[0]['plane_type']."</td></tr>
-  <tr><td>Rekisteri:</td><td>".$pilotInfo[0]['plane_register']."</td></tr>
-  <tr><td>Kilpailutunnus:</td><td>".$pilotInfo[0]['plane_competition_sign']."</td></tr>
-  <tr><td>Luokka:</td><td>".$pilotInfo[0]['class_name_fin'] ."</td></tr>
-  <tr><td>Logger 1:</td><td>".$pilotInfo[0]['plane_logger_one'] ."</td></tr>
-  <tr><td>Logger 2:</td><td>".$pilotInfo[0]['plane_logger_two'] ."</td></tr>
-  <tr><td>FlarmID:</td><td>".$pilotInfo[0]['plane_flarm_id'] ."</td></tr>
+  <tr><td>Nimi: </td><td>" . $lastName . "&nbsp;" . $firstName . "</td></tr>
+  <tr><td>Kone: </td><td>" . $pilotInfo[0]['plane_type'] . "</td></tr>
+  <tr><td>Rekisteri: </td><td>" . $pilotInfo[0]['plane_register'] . "</td></tr>
+  <tr><td>Kilpailutunnus: </td><td>" . $pilotInfo[0]['plane_competition_sign'] . "</td></tr>
+  <tr><td>Kilpailuluokka: </td><td>" . $pilotInfo[0]['class_name_fin'] . "</td></tr>
+  <tr><td>Logger l: </td><td>" . $pilotInfo[0]['plane_logger_one'] . "</td></tr>
+  <tr><td>Logger 2: </td><td>" . $pilotInfo[0]['plane_logger_two'] . "</td></tr>
+  <tr><td>FlarmID: </td><td>" . $pilotInfo[0]['plane_flarm_id'] . "</td></tr>
   </table>
   <p>Voit tarkistaa ja päivittää tietosi:&nbsp;<a href='" . $pilotLinkUpdate . "' target='_blank'>täältä</a></p>
   <p><a href='" . $entriesUrl . "' target='_blank'>Ilmoittautumislista</a></p>";

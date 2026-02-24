@@ -129,6 +129,7 @@ if (isset($_POST["update"])) {
     $target_file = basename($_FILES["flight-logger-1"]["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $fileSize = $_FILES["flight-logger-1"]["size"];
+    $logger1 = basename($_FILES["flight-logger-1"]["name"]);
 
     $priority = 1;
 
@@ -152,6 +153,7 @@ if (isset($_POST["update"])) {
     $target_file = basename($_FILES["flight-logger-2"]["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $fileSize = $_FILES["flight-logger-2"]["size"];
+    $logger2 = basename($_FILES["flight-logger-2"]["name"]);
 
     $priority = 2;
 
@@ -503,7 +505,7 @@ if (isset($_POST["update"])) {
         </fieldset>
         <div class="row mt-5">
           <div class="col-12 col-md-4 offset-md-4">
-            <button form="update-form" class="btn btn-success w-100" name="update" type="submit"><?php echo $language[$l]['button-enrollment-send']; ?></button>
+            <button form="update-form" class="btn btn-success w-100" name="update" type="submit"><?php echo $language[$l]['button-enrollment-update']; ?></button>
           </div>
         </div>
       </form>
