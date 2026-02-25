@@ -1,9 +1,27 @@
 <!DOCTYPE html>
 <?php
 include "language.php";
-include "variables.php";
+include "functions.php";
+
+//VARIABLES
+$competitionId = 2;
+$c= new Competitions();
+$cp = new Pilots();
+$competitionInfo = $c->selectCompetitionInfo($competitionId);
+
+//ACTUAL TIME
+$actualTime = new DateTime("now");
 
 $entryTime = $actualTime->format("d.m.Y H:i:s");
+//HEADER IMAGE
+$confirmationHeaderImage = "images/".$competitionInfo[0]['competition_logo_image']; //ATTENTION! .PNG FILE EXTENSION
+//SELECT COMPETITION LANGUAGE
+$competitionLanguage = $competitionInfo[0]["competition_language"];
+if ($competitionLanguage == "FIN") {
+  $l = 0;
+} else if ($competitionLanguage == "ENG") {
+  $l = 1;
+}
 
 ?>
 

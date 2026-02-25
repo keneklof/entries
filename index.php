@@ -1,7 +1,70 @@
 <?php
-include "variables.php";
 include "language.php";
-include "functions.php";
+require "functions.php";
+
+//VARIABLES
+$competitionId = 2;
+$c = new Competitions();
+$cp = new Pilots();
+$pilotCountry = 0;
+//SELECTING COMPETITION INFO
+$competitionInfo = $c->selectCompetitionInfo($competitionId);
+
+//LOCAL TIMEZONE
+date_default_timezone_set("Europe/Helsinki");
+
+//SELECT COMPETITON PILOTS (ONLY NEEDDE IN THIS SCRIPT)
+$pilots = $cp->selectCompetitionPilots($competitionId);
+
+//SELECT COMPETITION LANGUAGE
+$competitionLanguage = $competitionInfo[0]["competition_language"];
+if ($competitionLanguage == "FIN") {
+  $l = 0;
+} else if ($competitionLanguage == "ENG") {
+  $l = 1;
+}
+
+//SELECT PILOTS COUNTRIES
+$pilotsCountries = $c->selecPilotsCountries($competitionId);
+
+//SELECT COMPETITION CLASSES
+$competitionClasses = $c->selectCompetitionClasses($competitionId);
+
+//CREATING COMPETITION DATES
+$cs = new DateTime($competitionInfo[0]["competition_start"]);
+$ce = new DateTime($competitionInfo[0]["competition_end"]);
+$competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
+
+//LINKS
+$host = $competitionInfo[0]["competition_web_host"];
+$path = $competitionInfo[0]["competition_folder"];
+$confirmationUrl = $host . $path . "confirmation.php";
+$entriesUrl = $host . $path . "entries.php";
+$emailImage = $host . $path . "images/".$competitionInfo[0]['competition_logo_image']; //ATTENTION! .PNG FILE EXTENSION
+
+//HEADER INFO
+$competitionName = $competitionInfo[0]["competition_name"];
+$competitionLocation = $competitionInfo[0]["competition_location"];
+
+//HEADER STYLING
+//Background image size 1000x300
+$headerImage = "background-image: url(images/".$competitionInfo[0]['competition_header_image'].")";
+$confirmationHeaderImage = "images/".$competitionInfo[0]['competition_logo_image'].")"; //ATTENTION! .PNG FILE EXTENSION
+$entriesHeaderImage = "background-image: url(images/".$competitionInfo[0]['competition_header_image'].")";
+$competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
+$competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
+$competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:30%;";
+
+//COMPETITION LINKS
+if ($l == 0) {
+  $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
+  $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl . "' target='_blank'>Ilmoittautuneet</a>";
+} else if ($l == 1) {
+  $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Website</a>";
+  $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+  $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl . "' target='_blank'>Entries</a>";
+}
 
 //HANDLING UPDATE FORM INPUTS
 //Error array for form inputs
@@ -31,6 +94,29 @@ if (isset($_POST["submit"])) {
   //Pilot club
   if (isset($_POST["pilot-club"]) && $_POST["pilot-club"] != "") {
     $club = checkInput($_POST["pilot-club"]);
+    switch (strtolower($club)) {
+      case "rac":
+        $club = "Räyskälän Ilmailukerho";
+        break;
+      case "nil":
+        $club = "Nuorisoilmailijat";
+        break;
+      case "kily":
+        $club = "Kouvolan Seudun Ilmailuyhdistys";
+        break;
+      case "pik":
+        $club = "Polyteknikkojen Ilmailuyhdistys";
+        break;
+      case "pik":
+        $club = "Polyteknikkojen Ilmailuyhdistys";
+        break;
+      case "oik":
+        $club = "Oulun Ilmailukerho";
+        break;
+      default:
+        $club = $club;
+        break;
+    }
   } else {
     $club = "Ei kerhoa";
   }
@@ -168,7 +254,7 @@ if (isset($_POST["submit"])) {
     $entryTime = $et->format("Y-m-d H:i:s");
     $np = new Pilots();
     $newPilot = $np->newPilot($competitionId, $firstName, $lastName, $phone, $email, $club, $pilotCountry, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $pilotLinkId, $entryTime, $entryTime);
-    sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $pilotLinkUpdate, $entriesUrl, $emailImage, $firstName, $lastName);
+    sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $pilotLinkUpdate, $entriesUrl, $emailImage, $firstName, $lastName, $email);
     if ($newPilot == 1) {
       header("location:" . $confirmationUrl);
     } else if ($newPilot == 0) {
@@ -247,6 +333,8 @@ if (isset($_POST["submit"])) {
         echo $warnings;
       } ?>
       <h4><?php echo $language[$l]["header"]; ?></h4>
+      <small class="text-danger"><?php echo $language[$l]["mandatory-fields"]; ?>
+      </small>
       <form name="enrollment" id="enrollment-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
         <!--===== PILOT INFO =====-->
         <fieldset>
@@ -484,10 +572,9 @@ if (isset($_POST["submit"])) {
             <div class="col-12 col-md-9 mb-3 mb-md-0">
               <label for="other-info"><?php echo $language[$l]["label-other-info"]; ?></label>
               <textarea class="w-100 form-control" name="other-info" id="other-info" rows="10" placeholder="<?php echo $language[$l]['placeholder-info']; ?>">
-                <?php if (isset($otherInfo)) {
+                <?php if (isset($F)) {
                   echo $otherInfo;
-                } ?>
-                  </textarea>
+                } ?></textarea>
             </div>
           </div>
         </fieldset>
