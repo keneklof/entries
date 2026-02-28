@@ -18,3 +18,13 @@ function flightLoggerOne() {
     logger2.removeAttribute("disabled");
   }
 }
+
+function deletePilot(id) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+            }
+        }
+        xmlhttp.open("GET", "delete_pilot.php?pilot-link-id="+id, true);
+        xmlhttp.send();
+}

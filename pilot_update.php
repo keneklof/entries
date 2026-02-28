@@ -304,7 +304,7 @@ if (isset($_POST["update"])) {
         echo $warnings;
       } ?>
       <?php if (isset($_REQUEST["update"]) && $_REQUEST["update"] == 1) {
-        echo "<div class='alert alert-success text-center'>Päivitys onnistui!</div>";
+        echo "<div class='alert alert-success text-center'>" . $language[$l]['pilot-update-success'] . "</div>";
       } ?>
       <h4><?php echo $language[$l]["pilot-update-header"]; ?></h4>
       <form name="enrollment" id="update-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
@@ -350,7 +350,7 @@ if (isset($_POST["update"])) {
             <div class="row">
               <label for="pilot-country"><?php echo $language[$l]["label-pilot-country"] . "<span class='text-danger'> *</span>"; ?></label>
               <div class="col-12 col-md-2">
-                <select class="form-control" name="pilot-country" id="pilot-country">
+                <select class="form-select" name="pilot-country" id="pilot-country">
                   <?php
                   if ($l == 0) {
                     foreach ($pilotsCountries as $country) {
@@ -410,7 +410,7 @@ if (isset($_POST["update"])) {
             </div>
             <div class="col-12 col-md-2">
               <label for="plane-winglets"><?php echo $language[$l]["label-plane-winglets"] . "<span class='text-danger'> *</span>"; ?></label>
-              <select class="form-control" name="plane-winglets" id="plane-winglets">
+              <select class="form-select" name="plane-winglets" id="plane-winglets">
                 <option value="1" <?php if ($pilotInfo[0]["plane_winglets"] == 1) {
                                     echo "selected";
                                   } ?>><?php echo $language[$l]["select-option-winglets-2"]; ?></option>
@@ -421,7 +421,7 @@ if (isset($_POST["update"])) {
             </div>
             <div class="col-12 col-md-2">
               <label for="plane-engine"><?php echo $language[$l]["label-plane-engine"] . "<span class='text-danger'> *</span>"; ?></label>
-              <select class="form-control" name="plane-engine" id="plane-engine">
+              <select class="form-select" name="plane-engine" id="plane-engine">
                 <option value='1' <?php if ($pilotInfo[0]["plane_engine"] == 1) {
                                     echo "selected";
                                   } ?>><?php echo $language[$l]['select-option-engine-2']; ?></option>
@@ -455,7 +455,7 @@ if (isset($_POST["update"])) {
             <div class="col-12 col-md-2">
               <label for="competition-class"><?php echo $language[$l]["label-competition-class"] . "<span class='text-danger'> *</span>"; ?></label>
               <!--===== Classes selected from database =====-->
-              <select class="form-control" name="competition-class" id="competition-class" required>
+              <select class="form-select" name="competition-class" id="competition-class" required>
                 <?php
                 if ($l == 0) {
                   foreach ($competitionClasses as $class) {
@@ -549,7 +549,7 @@ if (isset($_POST["update"])) {
           <div class="row">
             <div class="col-12 col-md-3">
               <label for="accomodation"><?php echo $language[$l]["label-accomodation"] . "<span class='text-danger'> *</span>"; ?></label>
-              <select class="form-control" name="accomodation" id="accomodation" required>
+              <select class="form-select" name="accomodation" id="accomodation" required>
                 <?php
                 $selected1 = '';
                 $selected2 = '';
@@ -587,16 +587,48 @@ if (isset($_POST["update"])) {
             </div>
             <div class="col-12 col-md-9">
               <label for="other-info"><?php echo $language[$l]["label-other-info"]; ?></label>
-              <textarea class="w-100 form-control" name="other-info" id="other-info" rows="10" placeholder="<?php echo $language[$l]['placeholder-info']; ?>"><?php echo $pilotInfo[0]["pilot_other_info"]; ?></textarea>
+              <small class="d-block">(<?php echo $language[$l]['placeholder-info']; ?>)</small>
+              <textarea class="w-100 form-control" name="other-info" id="other-info" rows="10"><?php echo $pilotInfo[0]["pilot_other_info"]; ?></textarea>
             </div>
           </div>
         </fieldset>
-        <div class="row mt-5">
-          <div class="col-12 col-md-4 offset-md-4">
-            <button form="update-form" class="btn btn-success w-100" name="update" type="submit"><?php echo $language[$l]['button-enrollment-update']; ?></button>
-          </div>
-        </div>
       </form>
+      <div class="row mt-5">
+        <div class="col-12 col-md-3 offset-md-3">
+          <button form="update-form" class="btn btn-success w-100" name="update" type="submit"><?php echo $language[$l]['button-enrollment-update']; ?></button>
+        </div>
+        <div class="col-12 col-md-3">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="<?php echo "#delete-" . $pilots[0]["pilot_id"] . "-" . $pilots[0]["plane_competition_sign"]; ?>">
+            <?php echo $language[$l]['button-enrollment-delete']; ?>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
+  <!--===== DELETE MODALS =====-->
+  <!-- Modal -->
+  <div class="modal fade" id="<?php echo "delete-" . $pilots[0]["pilot_id"] . "-" . $pilots[0]["plane_competition_sign"]; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel"><?php echo $language[$l]['button-enrollment-delete']; ?></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><?php echo $language[$l]['button-enrollment-delete-text']; ?></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo $language[$l]['button-enrollment-cancel']; ?></button>
+          <button id="<?php echo $pilots[0]["pilot_link_id"]; ?>" type="button" class="btn btn-danger" onclick="deletePilot(this.id)"><?php echo $language[$l]['button-enrollment-delete']; ?></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="test">
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>

@@ -8,7 +8,7 @@ date_default_timezone_set("Europe/Helsinki");
 //VARIABLES
 $competitionId = 2;
 $cp = new Pilots();
-$c= new Competitions();
+$c = new Competitions();
 $competitionInfo = $c->selectCompetitionInfo($competitionId);
 
 //SELECT COMPETITON PILOTS (ONLY NEEDDE IN THIS SCRIPT)
@@ -37,7 +37,7 @@ $competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
 $host = $competitionInfo[0]["competition_web_host"];
 $path = $competitionInfo[0]["competition_folder"];
 $confirmationUrl = $host . $path . "confirmation.php";
-$entriesUrl = $host . $path. "entries.php";
+$entriesUrl = $host . $path . "entries.php";
 $emailImage = $host . $path . "images/competition-logo.png";
 
 //HEADER INFO
@@ -46,9 +46,9 @@ $competitionLocation = $competitionInfo[0]["competition_location"];
 
 //HEADER STYLING
 //Background image size 1000x300
-$headerImage = "background-image: url(images/".$competitionInfo[0]['competition_header_image'].")";
-$confirmationHeaderImage = "images/".$competitionInfo[0]['competition_logo_image'].")"; //ATTENTION! .PNG FILE EXTENSION
-$entriesHeaderImage = "background-image: url(images/".$competitionInfo[0]['competition_header_image'].")";
+$headerImage = "background-image: url(images/" . $competitionInfo[0]['competition_header_image'] . ")";
+$confirmationHeaderImage = "images/" . $competitionInfo[0]['competition_logo_image'] . ")"; //ATTENTION! .PNG FILE EXTENSION
+$entriesHeaderImage = "background-image: url(images/" . $competitionInfo[0]['competition_header_image'] . ")";
 $competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
 $competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
 $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:30%;";
@@ -87,13 +87,14 @@ if ($l == 0) {
       </div>
     </header>
     <div class="container p-3">
-      <h3 class="py-3 ml-3"><?php echo $language[$l]['entries-header']; ?></h3>
+      <h3 class="pt-3 ml-3"><?php echo $language[$l]['entries-header']; ?></h3>
+      <hr>
       <?php
       if ($l == 0) {
         foreach ($competitionClasses as $class) {
           echo "<h5>" . $class["class_name_fin"] . "</h5>";
           $counter = 0;
-          echo "<div class='table-responsive mb-3'>";
+          echo "<div class='table-responsive mb-3 entries-table'>";
           echo "<table class='table table-sm table-striped table-bordered'>";
           echo "<thead class='fw-bold'>";
           echo "<tr>";
@@ -101,7 +102,7 @@ if ($l == 0) {
           echo "<td>Pilotti</td>";
           echo "<td>Kone</td>";
           echo "<td>Tunnus</td>";
-          echo "<td class='d-none d-md-table-cell'>Kerho</td>";
+          echo "<td class='d-none d-sm-table-cell'>Kerho</td>";
           if (isset($competitionInfo[0]["competition_international"]) && $competitionInfo[0]["competition_international"] == 1) {
             echo "<td>Maa</td>";
           }
@@ -115,7 +116,7 @@ if ($l == 0) {
               echo "<td>" . $pilots[$i]["pilot_last_name"] . " " . $pilots[$i]["pilot_first_name"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_type"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_competition_sign"] . "</td>";
-              echo "<td class='d-none d-md-table-cell'>" . $pilots[$i]["pilot_club"] . "</td>";
+              echo "<td class='d-none d-sm-table-cell'>" . $pilots[$i]["pilot_club"] . "</td>";
               if (isset($competitionInfo[0]["competition_international"]) && $competitionInfo[0]["competition_international"] == 1) {
                 echo "<td><img class='flag' src='images/flags/" . $pilots[$i]["pilot_country"] . ".png'></td>";
               }
@@ -129,7 +130,7 @@ if ($l == 0) {
         foreach ($competitionClasses as $class) {
           echo "<h5>" . $class["class_name_eng"] . "</h5>";
           $counter = 0;
-          echo "<div class='table-responsive mb-3'>";
+          echo "<div class='table-responsive mb-3 entries-table'>";
           echo "<table class='table table-sm table-striped'>";
           echo "<thead class='table-secondary fw-bold table-bordered'>";
           echo "<tr>";
@@ -137,7 +138,7 @@ if ($l == 0) {
           echo "<td>Pilot</td>";
           echo "<td>Plane</td>";
           echo "<td>Sign</td>";
-          echo "<td class='d-none d-md-table-cell'>Club</td>";
+          echo "<td class='d-none d-sm-table-cell'>Club</td>";
           echo "<td>Country</td>";
           echo "</thead>";
           for ($i = 0; $i < count($pilots); $i++) {
@@ -149,7 +150,7 @@ if ($l == 0) {
               echo "<td>" . $pilots[$i]["pilot_last_name"] . " " . $pilots[$i]["pilot_first_name"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_type"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_competition_sign"] . "</td>";
-              echo "<td class='d-none d-md-table-cell'>" . $pilots[$i]["pilot_club"] . "</td>";
+              echo "<td class='d-none d-sm-table-cell'>" . $pilots[$i]["pilot_club"] . "</td>";
               echo "<td><img class='flag' src='images/flags/" . $pilots[$i]["pilot_country"] . ".png'></td>";
               echo "</tr>";
             }
@@ -162,7 +163,9 @@ if ($l == 0) {
       ?>
       </table>
     </div>
-  </div>
+    <div class="entry-footer bg-secondary">
+
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

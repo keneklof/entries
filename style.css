@@ -13,7 +13,7 @@
 
 @media only screen and (max-width: 600px) {
   .footer {
-    font-size: .8em!important;
+    font-size: .8em !important;
   }
 }
 
@@ -22,5 +22,15 @@
 }
 
 .flag {
-  width:30px;
+  width: 30px;
+}
+
+@media only screen and (max-width: 576px) {
+  .entries-table {
+    font-size: .9em;
+  }
+}
+
+.entry-footer {
+  height: 50px;
 }

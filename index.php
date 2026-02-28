@@ -33,14 +33,14 @@ $competitionClasses = $c->selectCompetitionClasses($competitionId);
 //CREATING COMPETITION DATES
 $cs = new DateTime($competitionInfo[0]["competition_start"]);
 $ce = new DateTime($competitionInfo[0]["competition_end"]);
-$competitionDates = $cs->format("d.m.") . "-" . $ce->format("d.m.Y");
+$competitionDates = $cs->format("j.n.") . "-" . $ce->format("j.n.Y");
 
 //LINKS
 $host = $competitionInfo[0]["competition_web_host"];
 $path = $competitionInfo[0]["competition_folder"];
 $confirmationUrl = $host . $path . "confirmation.php";
 $entriesUrl = $host . $path . "entries.php";
-$emailImage = $host . $path . "images/".$competitionInfo[0]['competition_logo_image']; //ATTENTION! .PNG FILE EXTENSION
+$emailImage = $host . $path . "images/" . $competitionInfo[0]['competition_logo_image']; //ATTENTION! .PNG FILE EXTENSION
 
 //HEADER INFO
 $competitionName = $competitionInfo[0]["competition_name"];
@@ -48,16 +48,16 @@ $competitionLocation = $competitionInfo[0]["competition_location"];
 
 //HEADER STYLING
 //Background image size 1000x300
-$headerImage = "background-image: url(images/".$competitionInfo[0]['competition_header_image'].")";
-$confirmationHeaderImage = "images/".$competitionInfo[0]['competition_logo_image'].")"; //ATTENTION! .PNG FILE EXTENSION
-$entriesHeaderImage = "background-image: url(images/".$competitionInfo[0]['competition_header_image'].")";
+$headerImage = "background-image: url(images/" . $competitionInfo[0]['competition_header_image'] . ")";
+$confirmationHeaderImage = "images/" . $competitionInfo[0]['competition_logo_image'] . ")"; //ATTENTION! .PNG FILE EXTENSION
+$entriesHeaderImage = "background-image: url(images/" . $competitionInfo[0]['competition_header_image'] . ")";
 $competitionNameTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:10%;";
 $competitionDateTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:20%;";
 $competitionLocationTextStyle = "color: #f2f7f9; text-shadow: 2px 2px #0c0b0b; position:absolute; left: 10%; top:30%;";
 
 //COMPETITION LINKS
 if ($l == 0) {
-  $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Websivut</a>";
+  $linkWebSite = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_web_site'] . "' target='_blank'>Verkkosivut</a>";
   $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
   $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl . "' target='_blank'>Ilmoittautuneet</a>";
 } else if ($l == 1) {
@@ -376,7 +376,7 @@ if (isset($_POST["submit"])) {
             <div class="row">
               <label for="pilot-country"><?php echo $language[$l]["label-pilot-country"] . "<span class='text-danger'> *</span>"; ?></label>
               <div class="col-12 col-md-2 mb-3 mb-md-0">
-                <select class="form-control" name="pilot-country" id="pilot-country">
+                <select class="form-select" name="pilot-country" id="pilot-country">
                   <option value="0" selected disabled><?php echo $language[$l]["select-option-country"]; ?></option>
                   <?php
                   if ($l == 0) {
@@ -436,7 +436,7 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-2 mb-3 mb-md-0">
               <label for="plane-winglets"><?php echo $language[$l]["label-plane-winglets"] . "<span class='text-danger'> *</span>"; ?></label>
-              <select class="form-control" name="plane-winglets" id="plane-winglets">
+              <select class="form-select" name="plane-winglets" id="plane-winglets">
                 <option value="0" selected disabled><?php echo $language[$l]["select-option-winglets-1"]; ?></option>
                 <option value="1" <?php if (isset($winglets) && $winglets == 1) {
                                     echo "selected";
@@ -448,7 +448,7 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-2 mb-3 mb-md-0">
               <label for="plane-engine"><?php echo $language[$l]["label-plane-engine"] . "<span class='text-danger'> *</span>"; ?></label>
-              <select class="form-control" name="plane-engine" id="plane-engine">
+              <select class="form-select" name="plane-engine" id="plane-engine">
                 <option value="0" selected disabled><?php echo $language[$l]["select-option-engine-1"]; ?></option>
                 <option value='1' <?php if (isset($engine) && $engine == 1) {
                                     echo "selected";
@@ -479,10 +479,10 @@ if (isset($_POST["submit"])) {
             <div class="col-12 col-md-2 mb-3 mb-md-0">
               <label for="competition-class"><?php echo $language[$l]["label-competition-class"] . "<span class='text-danger'> *</span>"; ?></label>
               <!--===== Classes selected from database =====-->
-              <select class="form-control" name="competition-class" id="competition-class" required>
+              <select class="form-select" name="competition-class" id="competition-class" required>
                 <?php
                 if ($l == 0) {
-                  echo "<option value = '0'>Valitse luokka</option>";
+                  echo "<option value = '0' disabled selected>Valitse luokka</option>";
                   foreach ($competitionClasses as $class) {
                     if (isset($competitionClass) && $competitionClass == $class['class_id']) {
                       echo "<option value='" . $class['class_id'] . "' selected>" . $class['class_name_fin'] . "</option>";
@@ -491,7 +491,7 @@ if (isset($_POST["submit"])) {
                     }
                   }
                 } else if ($l == 1) {
-                  echo "<option value = '0'>Choose class</option>";
+                  echo "<option value = '0' disabled selected>Choose class</option>";
                   foreach ($competitionClasses as $class) {
                     if (isset($competitionClass) && $competitionClass == $class['class_id']) {
                       echo "<option value='" . $class['class_id'] . "' selected>" . $class['class_name_eng'] . "</option>";
@@ -532,7 +532,7 @@ if (isset($_POST["submit"])) {
           <div class="row">
             <div class="col-12 col-md-3 mb-3 mb-md-0">
               <label for="accomodation"><?php echo $language[$l]["label-accomodation"] . "<span class='text-danger'> *</span>"; ?></label>
-              <select class="form-control" name="accomodation" id="accomodation" required>
+              <select class="form-select" name="accomodation" id="accomodation" required>
                 <?php
                 $selected1 = '';
                 $selected2 = '';
@@ -571,8 +571,9 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-9 mb-3 mb-md-0">
               <label for="other-info"><?php echo $language[$l]["label-other-info"]; ?></label>
-              <textarea class="w-100 form-control" name="other-info" id="other-info" rows="10" placeholder="<?php echo $language[$l]['placeholder-info']; ?>">
-                <?php if (isset($F)) {
+              <small class="d-block">(<?php echo $language[$l]['placeholder-info']; ?>)</small>
+              <textarea class="w-100 form-control" name="other-info" id="other-info" rows="10">
+                <?php if (isset($otherInfo)) {
                   echo $otherInfo;
                 } ?></textarea>
             </div>

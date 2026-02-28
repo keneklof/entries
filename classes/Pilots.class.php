@@ -62,4 +62,14 @@ class Pilots extends Database
     }
     return $pilotInfo;
   }
+
+  public function deletePilot($pilotId){
+     //DELETE COMPETITION PILOT
+    try {
+      $sql    = ("DELETE FROM pilots WHERE pilot_id = '$pilotId'");
+      $stmt   = $this->connect()->query($sql);
+    } catch (PDOException $e) {
+      file_put_contents('error_deleting_pilot_pilot.txt', date('d.m.Y G:i') . ' Deleting pilot:' . $e->getMessage() . "\n", FILE_APPEND);
+    }
+  }
 }

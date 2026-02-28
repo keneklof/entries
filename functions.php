@@ -49,7 +49,7 @@ function sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $p
     $mailBody =
       "<div style='margin-bottom = 5px;font-size: 1.1em;'><img src=" . $emailImage . " alt='Logo' style='width:250px'></div>
   <h3> Hei&nbsp;" . $pilotInfo[0]['pilot_first_name'] . "!</h3>
-  <p>" . strtoupper($competitionName) . "</p>
+  <p>" . mb_strtoupper($competitionName, 'UTF-8') . "</p>
   <p>ILMOITTAUTUMISTIEDOT</p>
   <table>
   <tr><td>Nimi: </td><td>" . $lastName . "&nbsp;" . $firstName . "</td></tr>
@@ -62,13 +62,13 @@ function sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $p
   <tr><td>FlarmID: </td><td>" . $pilotInfo[0]['plane_flarm_id'] . "</td></tr>
   </table>
   <p>Voit tarkistaa ja päivittää tietosi:&nbsp;<a href='" . $pilotLinkUpdate . "' target='_blank'>täältä</a></p>
-  <p><a href='" . $entriesUrl . "' target='_blank'>".$language[$l]["mail-entries-url"]."</a></p>
+  <p><a href='" . $entriesUrl . "' target='_blank'>" . $language[$l]["mail-entries-url"] . "</a></p>
   <p>Tervetuloa kisoihin!</p>";
   } else if ($l == 1) {
     $mailBody =
       "<div style='margin-bottom = 5px;font-size: 1.1em;'><img src=" . $emailImage . " alt='Logo' style='width:250px'></div>
   <h3> Hi&nbsp;" . $pilotInfo[0]['pilot_first_name'] . "!</h3>
-  <p>" . strtoupper($competitionName) . "</p>
+  <p>" . mb_strtoupper($competitionName, 'UTF-8') . "</p>
   <p>ENTRY INFORMATION</p>
   <table>
   <tr><td>Name: </td><td>" . $lastName . "&nbsp;" . $firstName . "</td></tr>

@@ -2,6 +2,7 @@ CREATE
 OR REPLACE VIEW view_competition_pilots AS
 SELECT
   P.pilot_id,
+  P.competition_id,
   P.pilot_first_name,
   P.pilot_last_name,
   P.pilot_phone,
@@ -24,12 +25,11 @@ SELECT
   P.pilot_link_id,
   P.entry_time,
   VCC.class_id,
-  VCC.competition_id,
   VCC.class_name_fin,
   VCC.class_name_eng,
   A.accomodation_name_fin,
   A.accomodation_name_eng
 FROM
   pilots AS P
-  INNER JOIN view_competition_classes AS VCC ON P.plane_class = VCC.class_id
+  INNER JOIN view_competition_classes AS VCC ON P.plane_class = VCC.class_id AND P.competition_id = VCC.competition_id
   INNER JOIN accomodations AS A ON P.pilot_accomodation = A.accomodation_id
