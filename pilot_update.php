@@ -594,7 +594,7 @@ if (isset($_POST["update"])) {
         </fieldset>
       </form>
       <div class="row mt-5">
-        <div class="col-12 col-md-3 offset-md-3">
+        <div class="col-12 col-md-3 offset-md-3 mb-3 mb-md-0">
           <button form="update-form" class="btn btn-success w-100" name="update" type="submit"><?php echo $language[$l]['button-enrollment-update']; ?></button>
         </div>
         <div class="col-12 col-md-3">

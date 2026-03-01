@@ -1,5 +1,4 @@
 <?php
-include "language.php";
 require "functions.php";
 
 //VARIABLES
@@ -424,7 +423,7 @@ if (isset($_POST["submit"])) {
             </div>
             <div class="col-12 col-md-2 mb-3 mb-md-0">
               <label for="plane-competition-sign"><?php echo $language[$l]["label-plane-competition-sign"] . "<span class='text-danger'> *</span>"; ?></label>
-              <input class="form-control" competition-sign="text" name="plane-competition-sign" id="plane-competition-sign" value="<?php if (isset($competitionSign)) {
+              <input class="form-control" competition-sign="text" name="plane-competition-sign" id="plane-competition-sign" maxlength="3" value="<?php if (isset($competitionSign)) {
                                                                                                                                       echo $competitionSign;
                                                                                                                                     } ?>" required>
             </div>
