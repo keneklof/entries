@@ -599,7 +599,7 @@ if (isset($_POST["update"])) {
         </div>
         <div class="col-12 col-md-3">
           <!-- Button trigger modal -->
-          <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="<?php echo "#delete-" . $pilots[0]["pilot_id"] . "-" . $pilots[0]["plane_competition_sign"]; ?>">
+          <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="<?php echo "#delete-" . $pilotInfo[0]["pilot_link_id"]; ?>">
             <?php echo $language[$l]['button-enrollment-delete']; ?>
           </button>
         </div>
@@ -608,20 +608,24 @@ if (isset($_POST["update"])) {
   </div>
   <!--===== DELETE MODALS =====-->
   <!-- Modal -->
-  <div class="modal fade" id="<?php echo "delete-" . $pilots[0]["pilot_id"] . "-" . $pilots[0]["plane_competition_sign"]; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <div class="modal fade" id="<?php echo "delete-" . $pilotInfo[0]["pilot_link_id"]; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">"
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel"><?php echo $language[$l]['button-enrollment-delete']; ?></h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <p><?php echo $language[$l]['button-enrollment-delete-text']; ?></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo $language[$l]['button-enrollment-cancel']; ?></button>
-          <button id="<?php echo $pilots[0]["pilot_link_id"]; ?>" type="button" class="btn btn-danger" onclick="deletePilot(this.id)"><?php echo $language[$l]['button-enrollment-delete']; ?></button>
-        </div>
+        <form action="delete_pilot.php" method="POST" id="delete-pilot">
+          <div class="modal-body">
+            <p><?php echo $language[$l]['button-enrollment-delete-text']; ?></p>
+            <input type="hidden" name="delete-pilot" value="<?php echo $pilotInfo[0]["pilot_link_id"]; ?>">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo $language[$l]['button-enrollment-cancel']; ?></button>
+            <button for="delete-pilot" type="submit" class="btn btn-danger"><?php echo $language[$l]['button-enrollment-delete']; ?></button>
+          </div>
+        </form>
+
       </div>
     </div>
   </div>
