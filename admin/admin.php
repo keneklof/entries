@@ -20,29 +20,62 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
   <script src="https: //kit.fontawesome.com/9e7a1653cf.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
-  <div class="container p-3">
+<body class="bg-secondary">
+  <div class="container p-3 bg-light">
     <h4 class="text-center">Hallintapaneeli&nbsp;<?php echo $competitionInfo[0]["competition_name"]; ?></h4>
     <?php
-     foreach ($competitionClasses as $class) {
-      echo "<h5>".$class['class_name_fin']."</h5>";
-     } 
+    foreach ($competitionClasses as $class) {
+      echo "<h5>" . $class['class_name_fin'] . "</h5>";
+      echo "<table class='table table-sm mb-4'>";
+      echo "<thead><tr class='table-secondary'>
+      <td>#</td>
+      <td>Pilotti</td>
+      <td>Kone</td>
+      <td>KT</td>
+      <td>Flarm</td>
+      <td>Logger 1</td>
+      <td>Logger 2</td>
+      <td>Ilm.maksu</td>
+      </tr></thead";
+      foreach ($pilots as $pilot) {
+        $counter = 0;
+        if ($pilot["plane_class"] == $class["class_id"] && $pilot["competition_id"] == $competitionId) {
+          $counter++;
+          if ($pilot["plane_flarm_id"] == "---") {
+            $flarmId = "<span class='text-danger'>&#10060</span>";
+          } else {
+            $flarmId = "<span class='text-success'>&#9989;</span>";
+          }
+          if ($pilot["plane_logger_one"] == "---") {
+            $logger1 = "<span class='text-danger'>&#10060</span>";
+          } else {
+            $logger1 = "<span class='text-success'>&#9989;</span>";
+          }
+          if ($pilot["plane_logger_two"] == "---") {
+            $logger2 = "<span class='text-danger'>&#10060</span>";
+          } else {
+            $logger2 = "<span class='text-success'>&#9989;</span>";
+          }
+          if ($pilot["pilot_entry_fee"] == 0) {
+            $entryFee = "<span class='text-danger'>&#10060</span>";
+          } else {
+            $entryFee = "<span class='text-success'>&#9989;</span>";
+          }
+          echo "<tr>
+          <td>" . $counter . "</td>
+          <td>" . $pilot['pilot_last_name'] . "&nbsp;" . $pilot['pilot_first_name'] . "</td>
+          <td>" . $pilot['plane_type'] . "</td>
+          <td>" . $pilot['plane_competition_sign'] . "</td>
+          <td>" . $flarmId . "</td>
+          <td>" . $logger1 . "</td>
+          <td>" . $logger2 . "</td>
+          <td>" . $entryFee . "</td>";
+        }
+        echo "</table>";
+        $counter == 0;
+      }
+    }
     ?>
-    
-    <div class="accordion" id="accordionExample">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-          <button class="accordion-button bg-info text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            Sucksdorff Martti
-          </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-          <div class="accordion-body">
-            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="admin.js"></script>
