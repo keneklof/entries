@@ -1,14 +1,14 @@
-var acc = document.getElementsByClassName("pilot-info");
-var i;
+function changeEntryFee (id){
+var paid = document.getElementById(id);
 
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (panel.style.maxHeight) {
-      panel.style.maxHeight = null;
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + "px";
-    }
-  });
+if(paid.classList.contains("btn-danger")){
+ paid.classList.remove("btn-danger");
+ paid.classList.add("btn-success");
+ paid.innerHTML = "Maksettu";
+} else if (paid.classList.contains("btn-success")){
+ paid.classList.remove("btn-success");
+ paid.classList.add("btn-danger");
+ paid.innerHTML = "Ei maksettu";
 }
+}
+
