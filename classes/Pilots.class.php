@@ -23,7 +23,7 @@ class Pilots extends Database
 
   public function updatePilot($competitionId, $pilotLinkId, $firstName, $lastName, $phone, $email, $club, $pilotCountry, $competitionClass, $accomodation, $otherInfo, $glider, $register, $competitionSign, $wingspan, $winglets, $engine, $flarmId, $logger1, $logger2, $updateTime)
   {
-    //INSERTING INTO DATABASE
+    //UPDATING DATABASE
     try {
       $sql = "UPDATE pilots SET pilot_first_name = ?, pilot_last_name = ?, pilot_phone = ?, pilot_email = ?, pilot_club = ?, pilot_country = ?, plane_class = ?, pilot_accomodation = ?, pilot_other_info = ?, plane_type = ?, plane_register = ?, plane_competition_sign = ?, plane_wingspan = ?, plane_winglets = ?, plane_engine = ?, plane_flarm_id = ?, plane_logger_one = ?, plane_logger_two = ?, update_time = ? WHERE competition_id = ? AND pilot_link_id = ?";
       $stmt = $this->connect()->prepare($sql);
@@ -63,9 +63,44 @@ class Pilots extends Database
     return $pilotInfo;
   }
 
-  public function deletePilot($pilotLinkId){
-     //DELETE COMPETITION PILOT
-   try {
+  private function entryFeeCheck($pilotLinkId)
+  {
+    //FETCH COMPETITION PILOTS
+    try {
+      $sql    = ("SELECT pilot_entry_fee FROM pilots WHERE pilot_link_id = '$pilotLinkId'");
+      $stmt   = $this->connect()->query($sql);
+      $entryFee = $stmt->fetchColumn();
+      return $entryFee;
+    } catch (PDOException $e) {
+      file_put_contents('error_checking_pilot_entry_fee.txt', date('d.m.Y G:i') . 'Fetching pilot_entry_fee:' . $e->getMessage() . "\n", FILE_APPEND);
+    }
+  }
+
+  public function upDateEntryFee($pilotLinkId, $paid)
+  {
+
+    try {
+      $sql = "UPDATE pilots SET pilot_entry_fee = ? WHERE pilot_link_id = ?";
+      $stmt = $this->connect()->prepare($sql);
+      if ($paid == 1) {
+        $stmt->execute([0, $pilotLinkId]);
+        return 0;
+      } else if ($paid == 0) {
+        $stmt->execute([1, $pilotLinkId]);
+        return 1;
+      }
+      
+    } catch (PDOException $e) {
+      file_put_contents('error_update_entry_fee.txt', date('d.m.Y G:i') . 'Pilotin maksun päivitys:' . $e->getMessage() . "\n", FILE_APPEND);
+      return 0;
+    }
+  }
+
+  public function deletePilot($pilotLinkId)
+  {
+
+    //DELETE COMPETITION PILOT
+    try {
       $sql    = ("DELETE FROM pilots WHERE pilot_link_id = ?");
       $stmt   = $this->connect()->prepare($sql);
       $stmt->execute([$pilotLinkId]);
@@ -73,6 +108,6 @@ class Pilots extends Database
     } catch (PDOException $e) {
       file_put_contents('error_deleting_pilot_pilot.txt', date('d.m.Y G:i') . ' Deleting pilot:' . $e->getMessage() . "\n", FILE_APPEND);
       return 0;
-      }
+    }
   }
 }

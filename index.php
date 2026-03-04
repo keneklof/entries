@@ -145,7 +145,7 @@ if (isset($_POST["submit"])) {
   if (isset($_POST["plane-competition-sign"])) {
     $competitionSign = strtoupper(checkInput($_POST["plane-competition-sign"]));
     //Creating an indidual string for the pilot
-    $pilotLinkId = strtolower($competitionSign) . uniqid($competitionInfo[0]["competition_uniq_id"]);
+    $pilotLinkId = uniqid($competitionInfo[0]["competition_uniq_id"]. strtolower($competitionSign));
   }
 
   //Plane wingspan

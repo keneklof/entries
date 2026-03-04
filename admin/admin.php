@@ -14,15 +14,19 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin</title>
+  <title>Admin&nbsp;<?php echo $competitionInfo[0]["competition_name"] ; ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="admin.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
   <script src="https: //kit.fontawesome.com/9e7a1653cf.js" crossorigin="anonymous"></script>
   <script src="admin.jss"></script>
 </head>
 
 <body class="bg-secondary">
-  <div class="container p-5 bg-light">
+  <div class="container p-3 p-md-5 bg-light">
     <h4 class="text-center">Hallintapaneeli&nbsp;<?php echo $competitionInfo[0]["competition_name"]; ?></h4>
     <?php
     foreach ($competitionClasses as $class) {
@@ -35,8 +39,8 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
       <td class='d-none d-sm-table-cell'>Kone</td>
       <td class='d-none d-sm-table-cell'>KT</td>
       <td>Flarm</td>
-      <td>Logger 1</td>
-      <td>Logger 2</td>
+      <td>IGC-1</td>
+      <td>IGC-2</td>
       <td>Ilm.maksu</td>
       </tr></thead";
       foreach ($pilots as $pilot) {
@@ -72,10 +76,12 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
           <td>" . $logger1 . "</td>
           <td>" . $logger2 . "</td>";
           echo "<td>"; ?>
-     <?php ?>
-          <button class="btn btn-sm btn-danger" id="<?php echo "id-".$pilot['plane_competition_sign'] ; ?>" onclick="changeEntryFee(this.id)">Ei maksettu</button>
-    <?php
-
+     <?php 
+     if(isset($pilot["pilot_entry_fee"]) && $pilot["pilot_entry_fee"] == 0){?>
+          <button class="btn btn-sm btn-danger w-75 animate__animated" id="<?php echo $pilot['pilot_link_id'] ; ?>" onclick="changeEntryFee(this.id)">Ei</button>
+          <?php } else if ((isset($pilot["pilot_entry_fee"]) && $pilot["pilot_entry_fee"] == 1)) {?>
+          <button class="btn btn-sm btn-success w-75 animate__animated" id="<?php echo $pilot['pilot_link_id'] ; ?>" onclick="changeEntryFee(this.id)">Kyllä</button>
+          <?php }        
           echo "</td>";
           echo "</tr>";
         }
