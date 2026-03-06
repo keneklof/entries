@@ -2,17 +2,23 @@
 include "language.php";
 require "functions.php";
 
-//LOCAL TIMEZONE
-date_default_timezone_set("Europe/Helsinki");
-
 //VARIABLES
 $competitionId = 2;
 $cp = new Pilots();
 $c = new Competitions();
 $competitionInfo = $c->selectCompetitionInfo($competitionId);
 
-//SELECT COMPETITON PILOTS (ONLY NEEDDE IN THIS SCRIPT)
-$pilots = $cp->selectCompetitionPilots($competitionId);
+if (isset($_GET["pilot_id"])) {
+  $pilotLinkId = checkInput($_GET["pilot_id"]);
+  $ud = new Pilots();
+  $pilotInfo = $ud->selectSinglePilotInfo($competitionId, $pilotLinkId);
+}
+
+//CHECKING IF PILOT DOES NOT EXIST
+//TODO!!
+
+//LOCAL TIMEZONE
+date_default_timezone_set("Europe/Helsinki");
 
 //SELECT COMPETITION LANGUAGE
 $competitionLanguage = $competitionInfo[0]["competition_language"];
@@ -63,13 +69,6 @@ if ($l == 0) {
   $linkSoaringSpot = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
   $linkEntries = "<a class='btn btn-light btn-sm w-100 mb-2 mb-md-0' href='" . $entriesUrl . "' target='_blank'>Entries</a>";
 }
-
-if (isset($_REQUEST["pilot_id"])) {
-  $pilotLinkId = checkInput($_REQUEST["pilot_id"]);
-}
-
-$ud = new Pilots();
-$pilotInfo = $ud->selectSinglePilotInfo($competitionId, $pilotLinkId);
 
 //HANDLING UPDATE FORM INPUTS
 //Error array for form inputs
@@ -267,7 +266,9 @@ if (isset($_POST["update"])) {
     if ($updatePilot == 1) {
       header("Location:" . $host . $path . "pilot_update.php?pilot_id=" . $pilotLinkId . "&update=1");
     } else if ($updatePilot == 0) {
-      $success = "<div class='alert alert-danger'>Jokin meni pieleen... :( Yritä hetken kuluttua uudelleen.</div>";
+      header("Location:" . $host . $path . "pilot_update.php?pilot_id=" . $pilotLinkId . "&update=0");
+    } else if ($updatePilot == 2) {
+      header("Location:" . $host . $path . "no_pilot.php");
     }
   }
 
@@ -305,7 +306,11 @@ if (isset($_POST["update"])) {
       } ?>
       <?php if (isset($_REQUEST["update"]) && $_REQUEST["update"] == 1) {
         echo "<div class='alert alert-success text-center'>" . $language[$l]['pilot-update-success'] . "</div>";
-      } ?>
+      } else if (isset($_REQUEST["update"]) && $_REQUEST["update"] == 0) {
+        echo "<div class='alert alert-danger text-center'>" . $language[$l]['pilot-update-no-success'] . "</div>";
+      }
+      ?>
+
       <h4><?php echo $language[$l]["pilot-update-header"]; ?></h4>
       <form name="enrollment" id="update-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post" enctype="multipart/form-data">
         <!--===== PILOT INFO =====-->

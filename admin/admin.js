@@ -16,7 +16,7 @@ function changeEntryFee(id) {
         paid.classList.add("animate__flash");
         setTimeout(function () {
             paid.classList.remove("animate__flash")
-        }, 2000)
+        }, 1000)
 
 
 
@@ -35,7 +35,7 @@ function changeEntryFee(id) {
         paid.classList.add("animate__flash");
         setTimeout(function () {
             paid.classList.remove("animate__flash")
-        }, 2000)
+        }, 1000)
     }
 }
 

@@ -40,7 +40,7 @@ class Pilots extends Database
 
     //FETCH COMPETITION PILOTS
     try {
-      $sql    = ("SELECT * FROM view_competition_pilots WHERE competition_id = '$competitionId'");
+      $sql    = ("SELECT * FROM view_competition_pilots WHERE competition_id = '$competitionId' ORDER BY pilot_last_name");
       $stmt   = $this->connect()->query($sql);
       $pilots = $stmt->fetchAll();
     } catch (PDOException $e) {
@@ -89,7 +89,6 @@ class Pilots extends Database
         $stmt->execute([1, $pilotLinkId]);
         return 1;
       }
-      
     } catch (PDOException $e) {
       file_put_contents('error_update_entry_fee.txt', date('d.m.Y G:i') . 'Pilotin maksun päivitys:' . $e->getMessage() . "\n", FILE_APPEND);
       return 0;

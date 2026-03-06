@@ -72,6 +72,7 @@ $language = array(
     "pilot-update-title" => "Pilotin tiedot",
     "pilot-update-header" => "Päivitä tietosi",
     "pilot-update-success" => "Päivitys onnistui",
+    "pilot-update-no-success" => "Jokin meni pieleen... Yritä uudelleen hetken kuluttua.",
     "delete-entry-success"=>"Ilmoittautumisen poistuminen onnistui",
     "igc-info" => "IGC-tiedostot on toimitettava kilpailun järjestäjälle viimeistään ensimmäistä kilpailupäivää edeltävänä päivänä. Jouduttaaksesi kilpailun järjestelyjä pyri lähettämään tiedostot mahdollisimman nopeasti, mieluiten ilmoittautumisen yhteydessä.",
   ),
@@ -146,6 +147,7 @@ $language = array(
     "pilot-update-title" => "Pilot info",
     "pilot-update-header" => "Update your information",
     "pilot-update-success" => "Update OK!",
+    "pilot-update-no-success" => "Something went wrong... Try again later.",
     "delete-entry-success"=>"Deleting competition entry succeeded",
     "igc-info" => "IGC-test files must be delivered to the organisation not later than the day before the first competition day. To speed up the arrangements of the competition we strongly recommend that you upload the files when you enroll to the competition.",
   )

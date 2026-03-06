@@ -106,11 +106,11 @@ if (isset($_POST["submit"])) {
       case "pik":
         $club = "Polyteknikkojen Ilmailuyhdistys";
         break;
-      case "pik":
-        $club = "Polyteknikkojen Ilmailuyhdistys";
-        break;
       case "oik":
         $club = "Oulun Ilmailukerho";
+        break;
+      case "hyik":
+        $club = "Hyvinkään Ilmailukerho";
         break;
       default:
         $club = $club;

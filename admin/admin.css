@@ -1,0 +1,9 @@
+@media only screen and (max-width: 576px) {
+  .table-pilots {
+    font-size: .85em;
+  }
+}
+
+.btn-entry-fee {
+  width: 75px!important;
+}
