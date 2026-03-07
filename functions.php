@@ -23,6 +23,11 @@ function checkInput($data): string
   return $data;
 }
 
+function mce($string){
+  $convertedString = mb_convert_encoding($string, "ISO-8859-1", "UTF-8");
+  return $convertedString;
+}
+
 function sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $pilotLinkUpdate, $entriesUrl, $emailImage, $firstName, $lastName, $email)
 {
   include "language.php";

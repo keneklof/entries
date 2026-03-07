@@ -112,7 +112,7 @@ if ($l == 0) {
               $counter++;
               echo "</tr>";
               echo "<tr;>";
-              echo "<td>" . $counter . "</td>";
+              echo "<td>" . $counter . ".</td>";
               echo "<td>" . $pilots[$i]["pilot_last_name"] . " " . $pilots[$i]["pilot_first_name"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_type"] . "</td>";
               echo "<td>" . $pilots[$i]["plane_competition_sign"] . "</td>";

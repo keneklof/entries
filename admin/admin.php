@@ -42,8 +42,8 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
       <td>Lgr2</td>
       <td>Ilm.maksu</td>
       </tr></thead";
+      $counter = 0;
       foreach ($pilots as $pilot) {
-        $counter = 0;
         if ($pilot["plane_class"] == $class["class_id"] && $pilot["competition_id"] == $competitionId) {
           $counter++;
           if ($pilot["plane_flarm_id"] == "---") {
@@ -68,7 +68,7 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
           }
           echo "<tr>
           <tr></tr>
-          <td>" . $counter . "</td>
+          <td>" . $counter . ".</td>
           <td><a href='../pilot_update.php?pilot_id=" . $pilot['pilot_link_id'] . "'" . " target='_blank'>" . $pilot['pilot_last_name'] . "&nbsp;" . $pilot['pilot_first_name'] . "</a></td>
           <td class='d-none d-sm-table-cell'>" . $pilot['plane_type'] . "</td>
           <td class='d-none d-sm-table-cell'>" . $pilot['plane_competition_sign'] . "</td>
@@ -93,7 +93,7 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
     ?>
     <div class="row">
       <div class="col-12 col-md-2 offset-md-5">
-        <a href="pilot_info_pdf.php" class="btn btn-sm btn-primary w-100" role="button" target="_blank">Pilottien tiedot PDF</a>
+        <a href="pilot_info_pdf.php" class="btn btn-sm btn-primary w-100" role="button" target="_blank">Pilotit PDF</a>
       </div>
     </div>
   </div>
