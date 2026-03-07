@@ -119,3 +119,6 @@ function sendConfirmationMail($competitionId, $competitionName, $pilotLinkId, $p
     file_put_contents('error_confirmation_mail.txt', date('d.m.Y G:i') . 'Ilmoittautumisvahvistus:' . $e->getMessage() . "\n", FILE_APPEND);
   }
 }
+
+
+

@@ -37,7 +37,7 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
       <td>Pilotti</td>
       <td class='d-none d-sm-table-cell'>Kone</td>
       <td class='d-none d-sm-table-cell'>KT</td>
-      <td>Flarm</td>
+      <td>FlarmID</td>
       <td>Lgr1</td>
       <td>Lgr2</td>
       <td>Ilm.maksu</td>
@@ -91,6 +91,11 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
       $counter == 0;
     }
     ?>
+    <div class="row">
+      <div class="col-12 col-md-2 offset-md-5">
+        <a href="pilot_info_pdf.php" class="btn btn-sm btn-primary w-100" role="button" target="_blank">Pilottien tiedot PDF</a>
+      </div>
+    </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="admin.js"></script>

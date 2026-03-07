@@ -444,7 +444,7 @@ if (isset($_POST["update"])) {
               <label for="flarm-id">Flarm ID</label>
               <input class="form-control" type="text" name="flarm-id" id="flarm-id" value="<?php
                                                                                             echo $pilotInfo[0]["plane_flarm_id"];
-                                                                                            ?>" required>
+                                                                                            ?>">
               <small class="text-danger"><?php if ($pilotInfo[0]["plane_flarm_id"] == "---") {
                                             echo $language[$l]["no-flarm-id"];
                                           } ?></small>
