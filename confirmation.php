@@ -2,9 +2,9 @@
 <?php
 include "language.php";
 include "functions.php";
+require "competition_id.php";
 
 //VARIABLES
-$competitionId = 2;
 $c= new Competitions();
 $cp = new Pilots();
 $competitionInfo = $c->selectCompetitionInfo($competitionId);

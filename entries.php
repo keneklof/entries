@@ -1,12 +1,11 @@
 <?php
 include "language.php";
 require "functions.php";
-
+require "competition_id.php";
 //LOCAL TIMEZONE
 date_default_timezone_set("Europe/Helsinki");
 
 //VARIABLES
-$competitionId = 2;
 $cp = new Pilots();
 $c = new Competitions();
 $competitionInfo = $c->selectCompetitionInfo($competitionId);

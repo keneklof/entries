@@ -1,9 +1,9 @@
 <?php
 include "language.php";
 require "functions.php";
+require "competition_id.php";
 
 //VARIABLES
-$competitionId = 2;
 $cp = new Pilots();
 $c = new Competitions();
 $competitionInfo = $c->selectCompetitionInfo($competitionId);
@@ -119,8 +119,8 @@ if (isset($_POST["update"])) {
       case "pik":
         $club = "Polyteknikkojen Ilmailuyhdistys";
         break;
-      case "pik":
-        $club = "Polyteknikkojen Ilmailuyhdistys";
+      case "hyik":
+        $club = "Hyvinkään Ilmailukerho";
         break;
       case "oik":
         $club = "Oulun Ilmailukerho";
@@ -289,7 +289,7 @@ if (isset($_POST["update"])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><?php echo $language[$l]["pilot-update-title"]; ?>
+  <title><?php echo $language[$l]["pilot-update-title"]." ".$pilotInfo[0]["pilot_first_name"] . "&nbsp;" . $pilotInfo[0]["pilot_last_name"]; ?>
   </title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https: //kit.fontawesome.com/9e7a1653cf.js" crossorigin="anonymous"></script>
@@ -300,7 +300,16 @@ if (isset($_POST["update"])) {
     <div class="update-form border p-5 p-md-3">
       <h3 class="text-center"><?php echo $competitionInfo[0]["competition_name"]; ?></h3>
       <h4 class="text-center"><?php echo $language[$l]["pilot-update-title"]; ?></h4>
-      <p class="lead text-center"><?php echo $pilotInfo[0]["pilot_first_name"] . "&nbsp;" . $pilotInfo[0]["pilot_last_name"] . "&nbsp;(" . $pilotInfo[0]["plane_competition_sign"] . ")"; ?></p>
+      <p class="lead text-center mb-0"><?php echo $pilotInfo[0]["pilot_first_name"] . "&nbsp;" . $pilotInfo[0]["pilot_last_name"] . "&nbsp;(" . $pilotInfo[0]["plane_competition_sign"] . ")"; ?></p>
+      <div class="text-center">
+          <?php
+          if ($pilotInfo[0]["pilot_entry_fee"] == 0) {
+            echo "<p>".$language[$l]["pilot-update-entry-fee"]."&nbsp;<span class='text-danger'><strong>".$language[$l]["pilot-update-entry-fee-not-ok"]."</strong></span></p>";
+          } else if ($pilotInfo[0]["pilot_entry_fee"] == 1) {
+            echo "<p>".$language[$l]["pilot-update-entry-fee"]."&nbsp;<span class='text-success'><strong>".$language[$l]["pilot-update-entry-fee-ok"]."</strong></span></p>";
+          }
+          ?>
+      </div>
       <?php if (isset($warnings)) {
         echo $warnings;
       } ?>
@@ -489,9 +498,9 @@ if (isset($_POST["update"])) {
                 <!--===== Logger info start =====-->
                 <?php
                 if ($pilotInfo[0]["plane_logger_one"] != "---") {
-                  echo "<div class='text-success text-center'><small>" . $pilotInfo[0]["plane_logger_one"] . "</small></div>";
+                  echo "<div class='text-success text-center mb-2 mb-md-0'><small>" . $pilotInfo[0]["plane_logger_one"] . "</small></div>";
                 } else if ($pilotInfo[0]["plane_logger_one"] == "---") {
-                  echo "<div class='text-danger text-center'><small>No primary logger sent</small></div>";
+                  echo "<div class='text-danger text-center mb-2 mb-md-0'><small>No primary logger sent</small></div>";
                 }
                 ?>
               </div>
@@ -500,9 +509,9 @@ if (isset($_POST["update"])) {
                 <input class="form-control" type="file" id="flight-logger-2" name="flight-logger-2">
                 <?php
                 if ($pilotInfo[0]["plane_logger_two"] != "---") {
-                  echo "<div class='text-success text-center'><small>" . $pilotInfo[0]["plane_logger_two"] . "</small></div>";
+                  echo "<div class='text-success text-center mb-2 mb-md-0'><small>" . $pilotInfo[0]["plane_logger_two"] . "</small></div>";
                 } else if ($pilotInfo[0]["plane_logger_two"] == "---") {
-                  echo "<div class='text-danger text-center'><small>No secondary logger sent</small></div>";
+                  echo "<div class='text-danger text-center mb-2 mb-md-0'><small>No secondary logger sent</small></div>";
                 }
                 ?>
               </div>
@@ -513,9 +522,9 @@ if (isset($_POST["update"])) {
                 <!--===== Logger info start =====-->
                 <?php
                 if ($pilotInfo[0]["plane_logger_one"] != "---") {
-                  echo "<div class='text-success text-center'><small>" . $pilotInfo[0]["plane_logger_one"] . "</small></div>";
+                  echo "<div class='text-success text-center mb-2 mb-md-0'><small>" . $pilotInfo[0]["plane_logger_one"] . "</small></div>";
                 } else if ($pilotInfo[0]["plane_logger_one"] == "---") {
-                  echo "<div class='text-danger text-center'><small>Ei lähetettyä ykköstallenninta</small></div>";
+                  echo "<div class='text-danger text-center mb-2 mb-md-0'><small>Ei lähetettyä ykköstallenninta</small></div>";
                 }
                 ?>
               </div>
@@ -524,9 +533,9 @@ if (isset($_POST["update"])) {
                 <input class="form-control" type="file" id="flight-logger-2" name="flight-logger-2">
                 <?php
                 if ($pilotInfo[0]["plane_logger_two"] != "---") {
-                  echo "<div class='text-success text-center'><small>" . $pilotInfo[0]["plane_logger_two"] . "</small></div>";
+                  echo "<div class='text-success text-center mb-2 mb-md-0'><small>" . $pilotInfo[0]["plane_logger_two"] . "</small></div>";
                 } else if ($pilotInfo[0]["plane_logger_two"] == "---") {
-                  echo "<div class='text-danger text-center'><small>Ei lähetettyä kakkostallenninta</small></div>";
+                  echo "<div class='text-danger text-center mb-2 mb-md-0'><small>Ei lähetettyä kakkostallenninta</small></div>";
                 }
                 ?>
               </div>

@@ -1,7 +1,7 @@
 <?php
 require "functions.php";
+require "competition_id.php";
 //SELECT COMPETITION LANGUAGE
-$competitionId = 2;
 $c = new Competitions();
 $competitionInfo = $c->selectCompetitionInfo($competitionId);
 $competitionLanguage = $competitionInfo[0]["competition_language"];

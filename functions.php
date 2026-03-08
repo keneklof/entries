@@ -10,10 +10,6 @@ require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 
-//COMPETITION ID
-//$competitionId = 2;
-//$host = $competitionInfo[0]["competition_web_host"];
-
 //CHECKING THE INPUTS
 function checkInput($data): string
 {

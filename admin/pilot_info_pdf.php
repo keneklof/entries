@@ -1,8 +1,7 @@
 <?php
 require "../functions.php";
+require "..//competition_id.php";
 require "fpdf/fpdf.php";
-
-$competitionId = 2;
 
 $cp = new Pilots();
 $c = new Competitions();
@@ -74,7 +73,7 @@ foreach ($classes as $class) {
   $pdf->Cell(30, 9, $class["class_name_fin"], 0, 1, 'L', 1);
   $counter = 1;
   foreach ($pilots as $pilot) {
-    $pdf->SetFont('Arial', '', 10);
+    $pdf->SetFont('Arial', '', 11);
     if ($pilot["plane_class"] == $class["class_id"] && $pilot["competition_id"] == $class["competition_id"]) {
       $pdf->Cell(10, 5, $counter.".", 0, 0, 'L', 1);
       $pdf->Cell(40, 5, mce($pilot["pilot_last_name"] . " " . $pilot["pilot_first_name"]), 0, 0, 'L', 1);

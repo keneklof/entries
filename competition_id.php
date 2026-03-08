@@ -1,0 +1,3 @@
+<?php
+ $competitionId = 2; 
+?>

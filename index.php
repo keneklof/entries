@@ -1,8 +1,8 @@
 <?php
 require "functions.php";
+require "competition_id.php";
 
 //VARIABLES
-$competitionId = 2;
 $c = new Competitions();
 $cp = new Pilots();
 $pilotCountry = 0;
@@ -402,7 +402,6 @@ if (isset($_POST["submit"])) {
               </div>
             </div>
           <?php } ?>
-
         </fieldset>
         <hr>
         <!--===== PLANE INFO =====-->

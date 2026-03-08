@@ -1,6 +1,7 @@
 <?php
 include "../functions.php";
-$competitionId = 2;
+require "../competition_id.php";
+
 $c = new Competitions();
 $competitionClasses = $c->selectCompetitionClasses($competitionId);
 $competitionInfo = $c->selectCompetitionInfo($competitionId);
@@ -27,6 +28,25 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
 <body class="bg-secondary">
   <div class="container p-3 p-md-5 bg-light">
     <h4 class="text-center">Admin&nbsp;<?php echo $competitionInfo[0]["competition_name"]; ?></h4>
+    <ul>
+      <li>FLARM JA LOGGERIT</li>
+      <ul>
+        <li>Tämä sivu toimii realiajassa.</li>
+        <li>Kun pilotti syöttä FlarmId:nsä tai lataa IGC-tiedostonsa, se näkyy heti.</li>
+      </ul>
+      <li>PILOTIN NIMI</li>
+      <ul>
+        <li>On linkki pilotin imoittautumiskaavakkeeseen.</li>
+        <li>Pilotti käyttää samaa kaaavaketta päivittääkseen tietojaan.</li>
+      </ul>
+      <li>ILMOITTAUTUMISMAKSU</li>
+      <ul>
+      <li>Klikkaamalla ilmoittautumismaksun painiketta voi merkitä maksun maksetuksi/ei maksetuksi (oletuksena ei maksettu)</li>
+      <li>Klikatessa painiketta se välähtää pari kertaa, muuttaa väriä ja uusi tieto on tallennettu tietokantaan.</li>
+      <li>Maksetun ja ei maksetun välillä voi vaihtaa kuinka monta kertaa tahansa</li>
+      <li>Kun pilotti avaa oman lomakkeensa, hän näkee onko kilpailunjärjestäjä huomioinut ilmoittautumismaksun maksamisen.</li>
+      </ul>
+    </ul>
     <?php
     foreach ($competitionClasses as $class) {
       echo "<h5>" . $class['class_name_fin'] . "</h5>";
@@ -47,24 +67,19 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
         if ($pilot["plane_class"] == $class["class_id"] && $pilot["competition_id"] == $competitionId) {
           $counter++;
           if ($pilot["plane_flarm_id"] == "---") {
-            $flarmId = "<span class='text-danger'>&#10060</span>";
+            $flarmId = "<span class='text-danger'>&#128308</span>";
           } else {
             $flarmId = "<span class='text-success'>&#9989;</span>";
           }
           if ($pilot["plane_logger_one"] == "---") {
-            $logger1 = "<span class='text-danger'>&#10060</span>";
+            $logger1 = "<span class='text-danger'>&#128308</span>";
           } else {
             $logger1 = "<span class='text-success'>&#9989;</span>";
           }
           if ($pilot["plane_logger_two"] == "---") {
-            $logger2 = "<span class='text-danger'>&#10060</span>";
+            $logger2 = "<span class='text-danger'>&#128308</span>";
           } else {
             $logger2 = "<span class='text-success'>&#9989;</span>";
-          }
-          if ($pilot["pilot_entry_fee"] == 0) {
-            $entryFee = "<span class='text-danger'>&#10060</span>";
-          } else {
-            $entryFee = "<span class='text-success'>&#9989;</span>";
           }
           echo "<tr>
           <tr></tr>
