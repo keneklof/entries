@@ -9,7 +9,6 @@
   </head>
   <body>
     <div class="container py-5">
-      <h1 class="text-center">Hello, Bootstrap 5!</h1>
       <p class="lead text-center">No pilot!</p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

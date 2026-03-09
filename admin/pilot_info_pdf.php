@@ -35,7 +35,7 @@ class PDF extends FPDF
     $this->SetRightMargin(15);
     $this->setFont('Arial', '', '14');
     $date = Date('j.n.');
-    $str  = mb_convert_encoding($competitionName . "     " . $competitionDates . " " . $competitionLocation . "     Pilotit", "ISO-8859-1", "UTF-8");
+    $str  = mb_convert_encoding($competitionName . "     " . $competitionDates . " " . $competitionLocation , "ISO-8859-1", "UTF-8");
     $this->setLineWidth(0.1);
     $this->Line(15, 19, 195, 19);
     $this->Cell(0, 10, $str, 0, 1, 'L');

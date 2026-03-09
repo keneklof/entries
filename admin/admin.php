@@ -7,6 +7,13 @@ $competitionClasses = $c->selectCompetitionClasses($competitionId);
 $competitionInfo = $c->selectCompetitionInfo($competitionId);
 $cp = new Pilots();
 $pilots = $cp->selectCompetitionPilots($competitionId);
+
+//LINKS
+$linkSoaringSpot = "<a class='btn btn-outline-secondary btn-sm w-100' href='" . $competitionInfo[0]['competition_soaringspot'] . "' target='_blank'>SoaringSpot</a>";
+$host = $competitionInfo[0]["competition_web_host"];
+$path = $competitionInfo[0]["competition_folder"];
+$entriesUrl = $host . $path . "entries.php";
+
 ?>
 
 <!DOCTYPE html>
@@ -36,15 +43,20 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
       </ul>
       <li>PILOTIN NIMI</li>
       <ul>
-        <li>On linkki pilotin imoittautumiskaavakkeeseen.</li>
-        <li>Pilotti käyttää samaa kaaavaketta päivittääkseen tietojaan.</li>
+        <li>On linkki pilotin ilmoittautumiskaavakkeeseen.</li>
+        <li>Pilotti käyttää samaa kaavaketta päivittääkseen tietojaan.</li>
       </ul>
       <li>ILMOITTAUTUMISMAKSU</li>
       <ul>
-      <li>Klikkaamalla ilmoittautumismaksun painiketta voi merkitä maksun maksetuksi/ei maksetuksi (oletuksena ei maksettu)</li>
-      <li>Klikatessa painiketta se välähtää pari kertaa, muuttaa väriä ja uusi tieto on tallennettu tietokantaan.</li>
-      <li>Maksetun ja ei maksetun välillä voi vaihtaa kuinka monta kertaa tahansa</li>
-      <li>Kun pilotti avaa oman lomakkeensa, hän näkee onko kilpailunjärjestäjä huomioinut ilmoittautumismaksun maksamisen.</li>
+        <li>Klikkaamalla ilmoittautumismaksun painiketta voi merkitä maksun maksetuksi/ei maksetuksi (oletuksena ei maksettu)</li>
+        <li>Klikatessa painiketta se välähtää pari kertaa, muuttaa väriä ja uusi tieto on tallennettu tietokantaan.</li>
+        <li>Maksetun ja ei maksetun välillä voi vaihtaa kuinka monta kertaa tahansa</li>
+        <li>Kun pilotti avaa oman lomakkeensa, hän näkee onko kilpailunjärjestäjä huomioinut ilmoittautumismaksun maksamisen.</li>
+      </ul>
+      <li>MUUTA</li>
+      <ul>
+        <li>Laitan tämän sivun linkin GeeCM etusivulle</li>
+        <li>Sivu kannatta päivittää muutosten jälkeen varmistaakseen, että muutokset ovat tallentuneet oikein.</li>
       </ul>
     </ul>
     <?php
@@ -69,17 +81,17 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
           if ($pilot["plane_flarm_id"] == "---") {
             $flarmId = "<span class='text-danger'>&#128308</span>";
           } else {
-            $flarmId = "<span class='text-success'>&#9989;</span>";
+            $flarmId = "<span class='text-success'>&#128994;</span>";
           }
           if ($pilot["plane_logger_one"] == "---") {
             $logger1 = "<span class='text-danger'>&#128308</span>";
           } else {
-            $logger1 = "<span class='text-success'>&#9989;</span>";
+            $logger1 = "<span class='text-success'>&#128994;</span>";
           }
           if ($pilot["plane_logger_two"] == "---") {
             $logger2 = "<span class='text-danger'>&#128308</span>";
           } else {
-            $logger2 = "<span class='text-success'>&#9989;</span>";
+            $logger2 = "<span class='text-success'>&#128994;</span>";
           }
           echo "<tr>
           <tr></tr>
@@ -106,9 +118,15 @@ $pilots = $cp->selectCompetitionPilots($competitionId);
       $counter == 0;
     }
     ?>
-    <div class="row">
-      <div class="col-12 col-md-2 offset-md-5">
-        <a href="pilot_info_pdf.php" class="btn btn-sm btn-primary w-100" role="button" target="_blank">Pilotit PDF</a>
+    <div class="row my-3">
+      <div class="col-12 col-md-2 offset-md-3 mb-3 mb-md-3">
+        <a href="pilot_info_pdf.php" class="btn btn-sm btn-outline-secondary w-100" role="button" target="_blank">Pilotit PDF</a>
+      </div>
+      <div class="col-12 col-md-2 mb-3 mb-md-3">
+        <a href="<?php echo $entriesUrl; ?>" class="btn btn-sm btn-outline-secondary w-100" role="button" target="_blank">Ilmoittautuneet</a>
+      </div>
+      <div class="col-12 col-md-2 mb-3 mb-md-3">
+        <?php echo $linkSoaringSpot; ?>
       </div>
     </div>
   </div>

@@ -1,0 +1,16 @@
+#SECURE A DIRECTORY THAT THE .HTACCESS FILE IS IN WITH A PASSWOD
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+#DENIES THE LISTING OF INDEXES
+Options -Indexes
+
+#SHOWING ERRORDOCUMENTS
+ErrorDocument 401 https://digiken.fi/gcm/401.html
+AuthType basic
+AuthName "Sivusto suojattu autentikaatiolla"
+AuthUserFile ../../../../.htpasswds/entries/.htpasswd
+AuthGroupFile /dev/null
+Require valid-user
